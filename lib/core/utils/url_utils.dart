@@ -1,90 +1,47 @@
-/// URL-related utility functions.
-class UrlUtils {
-  UrlUtils._();
+/// URL detection and manipulation utilities.
+abstract final class UrlUtils {
+  /// Pattern that matches strings that look like URLs.
+  static final _urlPattern = RegExp(
+    r'^(https?://)' // explicit scheme
+    r'|^(localhost(:\d+)?(/.*)?$)' // localhost
+    r'|^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})' // IPv4
+    r'|^([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}', // domain
+    caseSensitive: false,
+  );
 
-  /// Common URL schemes that should be handled by external apps.
-  static const _externalSchemes = {'tel', 'mailto', 'sms', 'geo', 'intent', 'market'};
-
-  /// Determines if raw input is a URL or a search query.
+  /// Returns `true` if [input] looks like a URL rather than a search query.
   static bool isUrl(String input) {
     final trimmed = input.trim();
     if (trimmed.isEmpty) return false;
-
-    // Has explicit scheme
-    if (RegExp(r'^[a-zA-Z][a-zA-Z0-9+\-.]*://').hasMatch(trimmed)) {
-      return true;
-    }
-
-    // Looks like a domain (contains dot, no spaces, valid pattern)
-    if (!trimmed.contains(' ') && trimmed.contains('.')) {
-      final domainPattern = RegExp(
-        r'^([a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}(:\d+)?(/.*)?$',
-      );
-      if (domainPattern.hasMatch(trimmed)) return true;
-    }
-
-    // localhost with optional port
-    if (RegExp(r'^localhost(:\d+)?(/.*)?$').hasMatch(trimmed)) return true;
-
-    // IPv4
-    if (RegExp(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?(/.*)?$').hasMatch(trimmed)) {
-      return true;
-    }
-
-    return false;
+    if (trimmed.contains(' ')) return false;
+    return _urlPattern.hasMatch(trimmed);
   }
 
-  /// Normalizes a URL by adding scheme if needed.
-  static String normalizeUrl(String input) {
+  /// Ensures [input] has a scheme. Prepends `https://` when missing.
+  static String normalise(String input) {
     final trimmed = input.trim();
-
-    if (RegExp(r'^[a-zA-Z][a-zA-Z0-9+\-.]*://').hasMatch(trimmed)) {
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
       return trimmed;
     }
-
-    // Default to https
     return 'https://$trimmed';
   }
 
-  /// Checks if a URL scheme should be handled by an external app.
-  static bool isExternalScheme(String url) {
+  /// Extracts the registrable domain from a URL string.
+  /// `https://www.example.co.uk/path` → `example.co.uk`
+  static String? extractDomain(String url) {
     try {
-      final uri = Uri.parse(url);
-      return _externalSchemes.contains(uri.scheme.toLowerCase());
+      final uri = Uri.parse(normalise(url));
+      final host = uri.host;
+      if (host.isEmpty) return null;
+      // Strip leading "www."
+      return host.startsWith('www.') ? host.substring(4) : host;
     } catch (_) {
-      return false;
+      return null;
     }
   }
 
-  /// Extracts the display-friendly domain from a URL.
-  static String extractDomain(String url) {
-    try {
-      final uri = Uri.parse(url);
-      return uri.host.isEmpty ? url : uri.host;
-    } catch (_) {
-      return url;
-    }
-  }
-
-  /// Checks if a URL is a special internal page.
-  static bool isInternalPage(String url) {
-    return url.startsWith('about:') || url.startsWith('webbuddy:');
-  }
-
-  /// Attempts to upgrade HTTP URL to HTTPS.
-  static String tryUpgradeToHttps(String url) {
-    if (url.startsWith('http://')) {
-      return url.replaceFirst('http://', 'https://');
-    }
-    return url;
-  }
-
-  /// Extracts a clean title from a URL for display purposes.
-  static String titleFromUrl(String url) {
-    try {
-      final uri = Uri.parse(url);
-      if (uri.host.isNotEmpty) return uri.host;
-    } catch (_) {}
-    return url;
+  /// Builds a search URL for the given [query] using [searchUrl] prefix.
+  static String buildSearchUrl(String query, {required String searchUrl}) {
+    return '$searchUrl${Uri.encodeQueryComponent(query)}';
   }
 }

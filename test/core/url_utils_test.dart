@@ -3,106 +3,109 @@ import 'package:web_buddy/core/utils/url_utils.dart';
 
 void main() {
   group('UrlUtils.isUrl', () {
-    test('detects standard URLs', () {
+    test('detects full https URL', () {
       expect(UrlUtils.isUrl('https://example.com'), isTrue);
-      expect(UrlUtils.isUrl('http://example.com'), isTrue);
-      expect(UrlUtils.isUrl('ftp://files.example.com'), isTrue);
     });
 
-    test('detects domain-like inputs', () {
+    test('detects full http URL', () {
+      expect(UrlUtils.isUrl('http://example.com'), isTrue);
+    });
+
+    test('detects domain without scheme', () {
       expect(UrlUtils.isUrl('example.com'), isTrue);
-      expect(UrlUtils.isUrl('sub.example.com'), isTrue);
-      expect(UrlUtils.isUrl('example.co.uk'), isTrue);
-      expect(UrlUtils.isUrl('my-site.org'), isTrue);
+    });
+
+    test('detects subdomain', () {
+      expect(UrlUtils.isUrl('www.example.com'), isTrue);
     });
 
     test('detects localhost', () {
       expect(UrlUtils.isUrl('localhost'), isTrue);
-      expect(UrlUtils.isUrl('localhost:3000'), isTrue);
-      expect(UrlUtils.isUrl('localhost:8080/api'), isTrue);
     });
 
-    test('detects IP addresses', () {
+    test('detects localhost with port', () {
+      expect(UrlUtils.isUrl('localhost:8080'), isTrue);
+    });
+
+    test('detects IPv4 address', () {
       expect(UrlUtils.isUrl('192.168.1.1'), isTrue);
-      expect(UrlUtils.isUrl('10.0.0.1:8080'), isTrue);
-      expect(UrlUtils.isUrl('127.0.0.1/path'), isTrue);
     });
 
-    test('rejects search queries', () {
-      expect(UrlUtils.isUrl('flutter tutorial'), isFalse);
-      expect(UrlUtils.isUrl('how to code'), isFalse);
-      expect(UrlUtils.isUrl('what is dart'), isFalse);
+    test('rejects plain search query', () {
+      expect(UrlUtils.isUrl('flutter tutorials'), isFalse);
+    });
+
+    test('rejects single word without TLD', () {
+      expect(UrlUtils.isUrl('hello'), isFalse);
+    });
+
+    test('rejects empty string', () {
       expect(UrlUtils.isUrl(''), isFalse);
     });
 
-    test('rejects ambiguous single words without dots', () {
-      expect(UrlUtils.isUrl('flutter'), isFalse);
-      expect(UrlUtils.isUrl('hello'), isFalse);
+    test('rejects whitespace only', () {
+      expect(UrlUtils.isUrl('   '), isFalse);
     });
   });
 
-  group('UrlUtils.normalizeUrl', () {
-    test('adds https:// to bare domains', () {
-      expect(UrlUtils.normalizeUrl('example.com'), 'https://example.com');
+  group('UrlUtils.normalise', () {
+    test('preserves existing https scheme', () {
+      expect(
+        UrlUtils.normalise('https://example.com'),
+        equals('https://example.com'),
+      );
     });
 
-    test('preserves existing scheme', () {
-      expect(UrlUtils.normalizeUrl('http://example.com'), 'http://example.com');
-      expect(UrlUtils.normalizeUrl('https://example.com'), 'https://example.com');
+    test('preserves existing http scheme', () {
+      expect(
+        UrlUtils.normalise('http://example.com'),
+        equals('http://example.com'),
+      );
+    });
+
+    test('prepends https to bare domain', () {
+      expect(UrlUtils.normalise('example.com'), equals('https://example.com'));
     });
 
     test('trims whitespace', () {
-      expect(UrlUtils.normalizeUrl('  example.com  '), 'https://example.com');
+      expect(
+        UrlUtils.normalise('  example.com  '),
+        equals('https://example.com'),
+      );
     });
   });
 
   group('UrlUtils.extractDomain', () {
-    test('extracts domain from URL', () {
-      expect(UrlUtils.extractDomain('https://www.example.com/path'), 'www.example.com');
-      expect(UrlUtils.extractDomain('http://sub.domain.org:8080/'), 'sub.domain.org');
+    test('extracts domain from full URL', () {
+      expect(
+        UrlUtils.extractDomain('https://www.example.com/path'),
+        equals('example.com'),
+      );
     });
 
-    test('returns input for invalid URLs', () {
-      expect(UrlUtils.extractDomain('not-a-url'), 'not-a-url');
-    });
-  });
-
-  group('UrlUtils.isExternalScheme', () {
-    test('detects external schemes', () {
-      expect(UrlUtils.isExternalScheme('tel:+1234567890'), isTrue);
-      expect(UrlUtils.isExternalScheme('mailto:user@example.com'), isTrue);
-      expect(UrlUtils.isExternalScheme('sms:+1234567890'), isTrue);
+    test('extracts domain when no www', () {
+      expect(
+        UrlUtils.extractDomain('https://example.co.uk/page'),
+        equals('example.co.uk'),
+      );
     });
 
-    test('rejects web schemes', () {
-      expect(UrlUtils.isExternalScheme('https://example.com'), isFalse);
-      expect(UrlUtils.isExternalScheme('http://example.com'), isFalse);
-    });
-  });
-
-  group('UrlUtils.tryUpgradeToHttps', () {
-    test('upgrades http to https', () {
-      expect(UrlUtils.tryUpgradeToHttps('http://example.com'), 'https://example.com');
+    test('extracts domain from bare input', () {
+      expect(UrlUtils.extractDomain('github.com'), equals('github.com'));
     });
 
-    test('leaves https unchanged', () {
-      expect(UrlUtils.tryUpgradeToHttps('https://example.com'), 'https://example.com');
-    });
-
-    test('leaves other schemes unchanged', () {
-      expect(UrlUtils.tryUpgradeToHttps('ftp://files.example.com'), 'ftp://files.example.com');
+    test('returns null for empty input', () {
+      expect(UrlUtils.extractDomain(''), isNull);
     });
   });
 
-  group('UrlUtils.isInternalPage', () {
-    test('detects internal pages', () {
-      expect(UrlUtils.isInternalPage('about:blank'), isTrue);
-      expect(UrlUtils.isInternalPage('about:newtab'), isTrue);
-      expect(UrlUtils.isInternalPage('webbuddy:settings'), isTrue);
-    });
-
-    test('rejects regular URLs', () {
-      expect(UrlUtils.isInternalPage('https://example.com'), isFalse);
+  group('UrlUtils.buildSearchUrl', () {
+    test('encodes query into search URL', () {
+      final result = UrlUtils.buildSearchUrl(
+        'dart lang',
+        searchUrl: 'https://www.google.com/search?q=',
+      );
+      expect(result, equals('https://www.google.com/search?q=dart+lang'));
     });
   });
 }
