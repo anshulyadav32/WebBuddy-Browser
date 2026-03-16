@@ -1,0 +1,82 @@
+name: web_buddy
+description: "A privacy-focused, modern web browser built with Flutter."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  # State management - Riverpod for predictable, testable state
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+
+  # WebView - platform-native web engines
+  webview_flutter: ^4.12.0
+  webview_flutter_android: ^4.5.0
+  webview_flutter_wkwebview: ^3.19.0
+
+  # Local database - Drift for type-safe SQL persistence
+  drift: ^2.25.0
+  sqlite3_flutter_libs: ^0.5.30
+
+  # Routing
+  go_router: ^15.1.2
+
+  # Networking
+  http: ^1.3.0
+  connectivity_plus: ^6.1.4
+
+  # URL handling & sharing
+  url_launcher: ^6.3.1
+  share_plus: ^10.1.4
+
+  # File & path utilities
+  path_provider: ^2.1.5
+  path: ^1.9.1
+
+  # Permissions
+  permission_handler: ^11.4.0
+
+  # Secure storage for sensitive prefs
+  flutter_secure_storage: ^9.2.4
+
+  # UUID for unique identifiers
+  uuid: ^4.5.1
+
+  # Collection utilities
+  collection: ^1.19.1
+
+  # Logging
+  logging: ^1.3.0
+
+  # Intl for date formatting
+  intl: ^0.20.2
+
+  # Freezed for immutable models
+  freezed_annotation: ^3.0.0
+  json_annotation: ^4.9.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  build_runner: ^2.4.15
+  drift_dev: ^2.25.0
+  freezed: ^3.0.0
+  json_serializable: ^6.9.4
+  riverpod_generator: ^2.6.4
+  custom_lint: ^0.7.5
+  riverpod_lint: ^2.6.4
+  mocktail: ^1.0.4
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/filter_lists/
+    - assets/icons/
