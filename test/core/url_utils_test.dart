@@ -73,6 +73,27 @@ void main() {
         equals('https://example.com'),
       );
     });
+
+    test('preserves path and query params', () {
+      expect(
+        UrlUtils.normalise('https://example.com/path?q=1'),
+        equals('https://example.com/path?q=1'),
+      );
+    });
+
+    test('prepends https to domain with port', () {
+      expect(
+        UrlUtils.normalise('example.com:8080'),
+        equals('https://example.com:8080'),
+      );
+    });
+
+    test('prepends https to domain with path', () {
+      expect(
+        UrlUtils.normalise('example.com/foo/bar'),
+        equals('https://example.com/foo/bar'),
+      );
+    });
   });
 
   group('UrlUtils.extractDomain', () {
