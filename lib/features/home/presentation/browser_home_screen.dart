@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../browser/presentation/widgets/browser_progress_bar.dart';
 import '../../browser/presentation/widgets/browser_toolbar.dart';
 import '../../browser/presentation/widgets/browser_webview.dart';
+import '../../downloads/presentation/downloads_screen.dart';
 import '../../tabs/application/tabs_controller.dart';
 import '../../tabs/presentation/tab_switcher_screen.dart';
 
@@ -24,6 +25,13 @@ class BrowserHomeScreen extends ConsumerWidget {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (_) => const TabSwitcherScreen(),
+                ),
+              );
+            },
+            onDownloadsTapped: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const DownloadsScreen(),
                 ),
               );
             },

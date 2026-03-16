@@ -9,10 +9,12 @@ class BrowserToolbar extends ConsumerStatefulWidget {
     super.key,
     this.tabCount = 1,
     this.onTabsTapped,
+    this.onDownloadsTapped,
   });
 
   final int tabCount;
   final VoidCallback? onTabsTapped;
+  final VoidCallback? onDownloadsTapped;
 
   @override
   ConsumerState<BrowserToolbar> createState() => _BrowserToolbarState();
@@ -137,6 +139,13 @@ class _BrowserToolbarState extends ConsumerState<BrowserToolbar> {
                       ),
                 ),
               ),
+            ),
+
+            // Downloads button
+            IconButton(
+              icon: const Icon(Icons.download, size: 20),
+              tooltip: 'Downloads',
+              onPressed: widget.onDownloadsTapped,
             ),
           ],
         ),

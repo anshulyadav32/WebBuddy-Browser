@@ -1,5 +1,5 @@
 /// Status of a file download.
-enum DownloadStatus { pending, downloading, completed, failed, cancelled }
+enum DownloadStatus { queued, downloading, completed, failed, cancelled }
 
 /// A tracked download.
 class DownloadItem {
@@ -11,7 +11,7 @@ class DownloadItem {
     this.mimeType,
     this.totalBytes = 0,
     this.receivedBytes = 0,
-    this.status = DownloadStatus.pending,
+    this.status = DownloadStatus.queued,
     required this.startedAt,
   });
 
@@ -45,6 +45,34 @@ class DownloadItem {
       receivedBytes: receivedBytes ?? this.receivedBytes,
       status: status ?? this.status,
       startedAt: startedAt,
+    );
+  }
+
+  /// Serialize to a flat map for persistence.
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'url': url,
+        'fileName': fileName,
+        'savePath': savePath,
+        'mimeType': mimeType,
+        'totalBytes': totalBytes,
+        'receivedBytes': receivedBytes,
+        'status': status.index,
+        'startedAt': startedAt.toIso8601String(),
+      };
+
+  /// Deserialize from a flat map.
+  factory DownloadItem.fromMap(Map<String, dynamic> map) {
+    return DownloadItem(
+      id: map['id'] as String,
+      url: map['url'] as String,
+      fileName: map['fileName'] as String,
+      savePath: map['savePath'] as String?,
+      mimeType: map['mimeType'] as String?,
+      totalBytes: map['totalBytes'] as int? ?? 0,
+      receivedBytes: map['receivedBytes'] as int? ?? 0,
+      status: DownloadStatus.values[map['status'] as int? ?? 0],
+      startedAt: DateTime.parse(map['startedAt'] as String),
     );
   }
 
