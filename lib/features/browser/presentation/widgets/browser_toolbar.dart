@@ -5,7 +5,14 @@ import '../browser_controller.dart';
 
 /// The address / omnibox toolbar with navigation controls.
 class BrowserToolbar extends ConsumerStatefulWidget {
-  const BrowserToolbar({super.key});
+  const BrowserToolbar({
+    super.key,
+    this.tabCount = 1,
+    this.onTabsTapped,
+  });
+
+  final int tabCount;
+  final VoidCallback? onTabsTapped;
 
   @override
   ConsumerState<BrowserToolbar> createState() => _BrowserToolbarState();
@@ -108,6 +115,26 @@ class _BrowserToolbarState extends ConsumerState<BrowserToolbar> {
                 onTap: () => _urlController.selection = TextSelection(
                   baseOffset: 0,
                   extentOffset: _urlController.text.length,
+                ),
+              ),
+            ),
+
+            const SizedBox(width: 4),
+
+            // Tabs button
+            GestureDetector(
+              onTap: widget.onTabsTapped,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  border: Border.all(color: cs.outline),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  '${widget.tabCount}',
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
               ),
             ),
