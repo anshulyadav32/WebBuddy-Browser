@@ -6,11 +6,7 @@ import 'package:web_buddy/features/tabs/presentation/tab_switcher_screen.dart';
 void main() {
   testWidgets('Tab switcher renders', (tester) async {
     await tester.pumpWidget(
-      const ProviderScope(
-        child: MaterialApp(
-          home: TabSwitcherScreen(),
-        ),
-      ),
+      const ProviderScope(child: MaterialApp(home: TabSwitcherScreen())),
     );
 
     await tester.pump();

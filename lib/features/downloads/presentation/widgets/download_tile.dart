@@ -74,8 +74,10 @@ class DownloadTile extends StatelessWidget {
               minHeight: 3,
             ),
             const SizedBox(height: 2),
-            Text('$received / $total',
-                style: textTheme.bodySmall?.copyWith(color: cs.onSurfaceVariant)),
+            Text(
+              '$received / $total',
+              style: textTheme.bodySmall?.copyWith(color: cs.onSurfaceVariant),
+            ),
           ],
         );
       case DownloadStatus.completed:
@@ -86,14 +88,20 @@ class DownloadTile extends StatelessWidget {
           style: textTheme.bodySmall?.copyWith(color: cs.onSurfaceVariant),
         );
       case DownloadStatus.failed:
-        return Text('Download failed',
-            style: textTheme.bodySmall?.copyWith(color: cs.error));
+        return Text(
+          'Download failed',
+          style: textTheme.bodySmall?.copyWith(color: cs.error),
+        );
       case DownloadStatus.cancelled:
-        return Text('Cancelled',
-            style: textTheme.bodySmall?.copyWith(color: cs.outline));
+        return Text(
+          'Cancelled',
+          style: textTheme.bodySmall?.copyWith(color: cs.outline),
+        );
       case DownloadStatus.queued:
-        return Text('Waiting…',
-            style: textTheme.bodySmall?.copyWith(color: cs.onSurfaceVariant));
+        return Text(
+          'Waiting…',
+          style: textTheme.bodySmall?.copyWith(color: cs.onSurfaceVariant),
+        );
     }
   }
 

@@ -79,51 +79,57 @@ void main() {
 
   group('Browser home screen rendering', () {
     testWidgets('toolbar is visible', (tester) async {
-      await tester.pumpWidget(_testApp(
-        const Scaffold(
-          body: Column(
-            children: [
-              BrowserToolbar(),
-              BrowserProgressBar(),
-              Expanded(child: Placeholder()),
-            ],
+      await tester.pumpWidget(
+        _testApp(
+          const Scaffold(
+            body: Column(
+              children: [
+                BrowserToolbar(),
+                BrowserProgressBar(),
+                Expanded(child: Placeholder()),
+              ],
+            ),
           ),
         ),
-      ));
+      );
       await tester.pumpAndSettle();
 
       expect(find.byType(BrowserToolbar), findsOneWidget);
     });
 
     testWidgets('progress bar is in the tree', (tester) async {
-      await tester.pumpWidget(_testApp(
-        const Scaffold(
-          body: Column(
-            children: [
-              BrowserToolbar(),
-              BrowserProgressBar(),
-              Expanded(child: Placeholder()),
-            ],
+      await tester.pumpWidget(
+        _testApp(
+          const Scaffold(
+            body: Column(
+              children: [
+                BrowserToolbar(),
+                BrowserProgressBar(),
+                Expanded(child: Placeholder()),
+              ],
+            ),
           ),
         ),
-      ));
+      );
       await tester.pumpAndSettle();
 
       expect(find.byType(BrowserProgressBar), findsOneWidget);
     });
 
     testWidgets('expanded content area exists', (tester) async {
-      await tester.pumpWidget(_testApp(
-        const Scaffold(
-          body: Column(
-            children: [
-              BrowserToolbar(),
-              BrowserProgressBar(),
-              Expanded(child: Placeholder()),
-            ],
+      await tester.pumpWidget(
+        _testApp(
+          const Scaffold(
+            body: Column(
+              children: [
+                BrowserToolbar(),
+                BrowserProgressBar(),
+                Expanded(child: Placeholder()),
+              ],
+            ),
           ),
         ),
-      ));
+      );
       await tester.pumpAndSettle();
 
       expect(find.byType(Placeholder), findsOneWidget);
@@ -136,28 +142,26 @@ void main() {
 
   group('Omnibox', () {
     testWidgets('text field is visible', (tester) async {
-      await tester.pumpWidget(_testApp(
-        const Scaffold(body: BrowserToolbar()),
-      ));
+      await tester.pumpWidget(_testApp(const Scaffold(body: BrowserToolbar())));
       await tester.pumpAndSettle();
 
       expect(find.byType(TextField), findsOneWidget);
     });
 
     testWidgets('shows hint text', (tester) async {
-      await tester.pumpWidget(_testApp(
-        const Scaffold(body: BrowserToolbar()),
-      ));
+      await tester.pumpWidget(_testApp(const Scaffold(body: BrowserToolbar())));
       await tester.pumpAndSettle();
 
       expect(find.text('Search or enter URL'), findsOneWidget);
     });
 
     testWidgets('displays current URL from state', (tester) async {
-      await tester.pumpWidget(_testApp(
-        const Scaffold(body: BrowserToolbar()),
-        state: const BrowserPageState(currentUrl: 'https://dart.dev'),
-      ));
+      await tester.pumpWidget(
+        _testApp(
+          const Scaffold(body: BrowserToolbar()),
+          state: const BrowserPageState(currentUrl: 'https://dart.dev'),
+        ),
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('https://dart.dev'), findsOneWidget);
@@ -170,28 +174,26 @@ void main() {
 
   group('Toolbar button visibility', () {
     testWidgets('back button is visible', (tester) async {
-      await tester.pumpWidget(_testApp(
-        const Scaffold(body: BrowserToolbar()),
-      ));
+      await tester.pumpWidget(_testApp(const Scaffold(body: BrowserToolbar())));
       await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.arrow_back), findsOneWidget);
     });
 
     testWidgets('forward button is visible', (tester) async {
-      await tester.pumpWidget(_testApp(
-        const Scaffold(body: BrowserToolbar()),
-      ));
+      await tester.pumpWidget(_testApp(const Scaffold(body: BrowserToolbar())));
       await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.arrow_forward), findsOneWidget);
     });
 
     testWidgets('reload button shown when not loading', (tester) async {
-      await tester.pumpWidget(_testApp(
-        const Scaffold(body: BrowserToolbar()),
-        state: const BrowserPageState(isLoading: false),
-      ));
+      await tester.pumpWidget(
+        _testApp(
+          const Scaffold(body: BrowserToolbar()),
+          state: const BrowserPageState(isLoading: false),
+        ),
+      );
       await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.refresh), findsOneWidget);
@@ -199,22 +201,25 @@ void main() {
     });
 
     testWidgets('stop button shown when loading', (tester) async {
-      await tester.pumpWidget(_testApp(
-        const Scaffold(body: BrowserToolbar()),
-        state: const BrowserPageState(isLoading: true),
-      ));
+      await tester.pumpWidget(
+        _testApp(
+          const Scaffold(body: BrowserToolbar()),
+          state: const BrowserPageState(isLoading: true),
+        ),
+      );
       await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.close), findsOneWidget);
       expect(find.byIcon(Icons.refresh), findsNothing);
     });
 
-    testWidgets('back button disabled when canGoBack is false',
-        (tester) async {
-      await tester.pumpWidget(_testApp(
-        const Scaffold(body: BrowserToolbar()),
-        state: const BrowserPageState(canGoBack: false),
-      ));
+    testWidgets('back button disabled when canGoBack is false', (tester) async {
+      await tester.pumpWidget(
+        _testApp(
+          const Scaffold(body: BrowserToolbar()),
+          state: const BrowserPageState(canGoBack: false),
+        ),
+      );
       await tester.pumpAndSettle();
 
       final btn = tester.widget<IconButton>(
@@ -223,12 +228,13 @@ void main() {
       expect(btn.onPressed, isNull);
     });
 
-    testWidgets('back button enabled when canGoBack is true',
-        (tester) async {
-      await tester.pumpWidget(_testApp(
-        const Scaffold(body: BrowserToolbar()),
-        state: const BrowserPageState(canGoBack: true),
-      ));
+    testWidgets('back button enabled when canGoBack is true', (tester) async {
+      await tester.pumpWidget(
+        _testApp(
+          const Scaffold(body: BrowserToolbar()),
+          state: const BrowserPageState(canGoBack: true),
+        ),
+      );
       await tester.pumpAndSettle();
 
       final btn = tester.widget<IconButton>(
@@ -237,12 +243,15 @@ void main() {
       expect(btn.onPressed, isNotNull);
     });
 
-    testWidgets('forward button disabled when canGoForward is false',
-        (tester) async {
-      await tester.pumpWidget(_testApp(
-        const Scaffold(body: BrowserToolbar()),
-        state: const BrowserPageState(canGoForward: false),
-      ));
+    testWidgets('forward button disabled when canGoForward is false', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _testApp(
+          const Scaffold(body: BrowserToolbar()),
+          state: const BrowserPageState(canGoForward: false),
+        ),
+      );
       await tester.pumpAndSettle();
 
       final btn = tester.widget<IconButton>(
@@ -251,12 +260,15 @@ void main() {
       expect(btn.onPressed, isNull);
     });
 
-    testWidgets('forward button enabled when canGoForward is true',
-        (tester) async {
-      await tester.pumpWidget(_testApp(
-        const Scaffold(body: BrowserToolbar()),
-        state: const BrowserPageState(canGoForward: true),
-      ));
+    testWidgets('forward button enabled when canGoForward is true', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _testApp(
+          const Scaffold(body: BrowserToolbar()),
+          state: const BrowserPageState(canGoForward: true),
+        ),
+      );
       await tester.pumpAndSettle();
 
       final btn = tester.widget<IconButton>(
@@ -272,31 +284,38 @@ void main() {
 
   group('Progress bar', () {
     testWidgets('hidden when not loading', (tester) async {
-      await tester.pumpWidget(_testApp(
-        const Scaffold(body: BrowserProgressBar()),
-        state: const BrowserPageState(isLoading: false),
-      ));
+      await tester.pumpWidget(
+        _testApp(
+          const Scaffold(body: BrowserProgressBar()),
+          state: const BrowserPageState(isLoading: false),
+        ),
+      );
       await tester.pumpAndSettle();
 
       expect(find.byType(LinearProgressIndicator), findsNothing);
     });
 
     testWidgets('visible when loading', (tester) async {
-      await tester.pumpWidget(_testApp(
-        const Scaffold(body: BrowserProgressBar()),
-        state: const BrowserPageState(isLoading: true, progress: 0.3),
-      ));
+      await tester.pumpWidget(
+        _testApp(
+          const Scaffold(body: BrowserProgressBar()),
+          state: const BrowserPageState(isLoading: true, progress: 0.3),
+        ),
+      );
       await tester.pump();
 
       expect(find.byType(LinearProgressIndicator), findsOneWidget);
     });
 
-    testWidgets('shows indeterminate bar when progress is zero',
-        (tester) async {
-      await tester.pumpWidget(_testApp(
-        const Scaffold(body: BrowserProgressBar()),
-        state: const BrowserPageState(isLoading: true, progress: 0.0),
-      ));
+    testWidgets('shows indeterminate bar when progress is zero', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _testApp(
+          const Scaffold(body: BrowserProgressBar()),
+          state: const BrowserPageState(isLoading: true, progress: 0.0),
+        ),
+      );
       await tester.pump();
 
       final indicator = tester.widget<LinearProgressIndicator>(

@@ -10,6 +10,9 @@ abstract final class _Keys {
   static const adBlockEnabled = 'settings.adBlockEnabled';
   static const httpsUpgradeEnabled = 'settings.httpsUpgradeEnabled';
   static const homePage = 'settings.homePage';
+  static const javaScriptEnabled = 'settings.javaScriptEnabled';
+  static const popUpBlockingEnabled = 'settings.popUpBlockingEnabled';
+  static const cookiePolicy = 'settings.cookiePolicy';
 }
 
 /// Persistence layer for [BrowserSettings].
@@ -26,6 +29,11 @@ class SettingsRepository {
       adBlockEnabled: _storage.getBool(_Keys.adBlockEnabled) ?? true,
       httpsUpgradeEnabled: _storage.getBool(_Keys.httpsUpgradeEnabled) ?? true,
       homePage: _storage.getString(_Keys.homePage) ?? 'about:blank',
+      javaScriptEnabled: _storage.getBool(_Keys.javaScriptEnabled) ?? true,
+      popUpBlockingEnabled:
+          _storage.getBool(_Keys.popUpBlockingEnabled) ?? true,
+      cookiePolicy:
+          CookiePolicy.values[_storage.getInt(_Keys.cookiePolicy) ?? 0],
     );
   }
 
@@ -36,6 +44,9 @@ class SettingsRepository {
       _storage.setBool(_Keys.adBlockEnabled, s.adBlockEnabled),
       _storage.setBool(_Keys.httpsUpgradeEnabled, s.httpsUpgradeEnabled),
       _storage.setString(_Keys.homePage, s.homePage),
+      _storage.setBool(_Keys.javaScriptEnabled, s.javaScriptEnabled),
+      _storage.setBool(_Keys.popUpBlockingEnabled, s.popUpBlockingEnabled),
+      _storage.setInt(_Keys.cookiePolicy, s.cookiePolicy.index),
     ]);
   }
 }

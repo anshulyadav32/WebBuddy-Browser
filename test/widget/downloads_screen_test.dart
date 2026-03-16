@@ -47,9 +47,7 @@ void main() {
 
       await tester.pumpWidget(
         ProviderScope(
-          overrides: [
-            downloadsControllerProvider.overrideWith((ref) => ctrl),
-          ],
+          overrides: [downloadsControllerProvider.overrideWith((ref) => ctrl)],
           child: const MaterialApp(home: DownloadsScreen()),
         ),
       );
@@ -85,9 +83,7 @@ void main() {
 
       await tester.pumpWidget(
         ProviderScope(
-          overrides: [
-            downloadsControllerProvider.overrideWith((ref) => ctrl),
-          ],
+          overrides: [downloadsControllerProvider.overrideWith((ref) => ctrl)],
           child: const MaterialApp(home: DownloadsScreen()),
         ),
       );
@@ -111,9 +107,7 @@ void main() {
 
       await tester.pumpWidget(
         ProviderScope(
-          overrides: [
-            downloadsControllerProvider.overrideWith((ref) => ctrl),
-          ],
+          overrides: [downloadsControllerProvider.overrideWith((ref) => ctrl)],
           child: const MaterialApp(home: DownloadsScreen()),
         ),
       );

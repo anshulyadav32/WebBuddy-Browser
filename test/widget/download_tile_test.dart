@@ -19,11 +19,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: DownloadTile(
-              item: item,
-              onOpen: () {},
-              onDelete: () {},
-            ),
+            body: DownloadTile(item: item, onOpen: () {}, onDelete: () {}),
           ),
         ),
       );
@@ -48,10 +44,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: DownloadTile(
-              item: item,
-              onCancel: () {},
-            ),
+            body: DownloadTile(item: item, onCancel: () {}),
           ),
         ),
       );
@@ -75,10 +68,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: DownloadTile(
-              item: item,
-              onDelete: () {},
-            ),
+            body: DownloadTile(item: item, onDelete: () {}),
           ),
         ),
       );
@@ -100,10 +90,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: DownloadTile(
-              item: item,
-              onDelete: () {},
-            ),
+            body: DownloadTile(item: item, onDelete: () {}),
           ),
         ),
       );

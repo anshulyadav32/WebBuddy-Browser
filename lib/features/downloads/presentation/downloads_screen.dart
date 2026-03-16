@@ -35,10 +35,7 @@ class DownloadsScreen extends ConsumerWidget {
                   value: 'clear_finished',
                   child: Text('Clear finished'),
                 ),
-                PopupMenuItem(
-                  value: 'clear_all',
-                  child: Text('Clear all'),
-                ),
+                PopupMenuItem(value: 'clear_all', child: Text('Clear all')),
               ],
             ),
         ],
@@ -48,15 +45,17 @@ class DownloadsScreen extends ConsumerWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.download_outlined,
-                      size: 64,
-                      color: Theme.of(context).colorScheme.outline),
+                  Icon(
+                    Icons.download_outlined,
+                    size: 64,
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
                   const SizedBox(height: 12),
                   Text(
                     'No downloads yet',
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
                   ),
                 ],
               ),
@@ -70,7 +69,8 @@ class DownloadsScreen extends ConsumerWidget {
                 final item = downloads[downloads.length - 1 - index];
                 return DownloadTile(
                   item: item,
-                  onOpen: item.status == DownloadStatus.completed &&
+                  onOpen:
+                      item.status == DownloadStatus.completed &&
                           item.savePath != null
                       ? () => _openFile(item.savePath!)
                       : null,

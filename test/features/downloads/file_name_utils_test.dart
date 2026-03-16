@@ -15,7 +15,8 @@ void main() {
     test('extracts filename from URL with query params', () {
       expect(
         FileNameUtils.deriveFromUrl(
-            'https://example.com/data.csv?v=2&token=abc'),
+          'https://example.com/data.csv?v=2&token=abc',
+        ),
         'data.csv',
       );
     });
@@ -23,29 +24,26 @@ void main() {
     test('extracts filename from deep path', () {
       expect(
         FileNameUtils.deriveFromUrl(
-            'https://cdn.example.com/assets/images/logo.png'),
+          'https://cdn.example.com/assets/images/logo.png',
+        ),
         'logo.png',
       );
     });
 
     test('returns fallback for URL with no path', () {
-      expect(
-        FileNameUtils.deriveFromUrl('https://example.com'),
-        'download',
-      );
+      expect(FileNameUtils.deriveFromUrl('https://example.com'), 'download');
     });
 
     test('returns fallback for empty string', () {
-      expect(
-        FileNameUtils.deriveFromUrl(''),
-        'download',
-      );
+      expect(FileNameUtils.deriveFromUrl(''), 'download');
     });
 
     test('uses custom fallback', () {
       expect(
-        FileNameUtils.deriveFromUrl('https://example.com',
-            fallback: 'file.bin'),
+        FileNameUtils.deriveFromUrl(
+          'https://example.com',
+          fallback: 'file.bin',
+        ),
         'file.bin',
       );
     });
@@ -57,7 +55,8 @@ void main() {
     test('extracts quoted filename', () {
       expect(
         FileNameUtils.deriveFromContentDisposition(
-            'attachment; filename="report.pdf"'),
+          'attachment; filename="report.pdf"',
+        ),
         'report.pdf',
       );
     });
@@ -65,7 +64,8 @@ void main() {
     test('extracts unquoted filename', () {
       expect(
         FileNameUtils.deriveFromContentDisposition(
-            'attachment; filename=data.csv'),
+          'attachment; filename=data.csv',
+        ),
         'data.csv',
       );
     });
@@ -73,7 +73,8 @@ void main() {
     test('extracts filename* (RFC 5987)', () {
       expect(
         FileNameUtils.deriveFromContentDisposition(
-            "attachment; filename*=UTF-8''r%C3%A9sum%C3%A9.pdf"),
+          "attachment; filename*=UTF-8''r%C3%A9sum%C3%A9.pdf",
+        ),
         'résumé.pdf',
       );
     });
@@ -87,10 +88,7 @@ void main() {
     });
 
     test('returns null for header without filename', () {
-      expect(
-        FileNameUtils.deriveFromContentDisposition('inline'),
-        isNull,
-      );
+      expect(FileNameUtils.deriveFromContentDisposition('inline'), isNull);
     });
   });
 

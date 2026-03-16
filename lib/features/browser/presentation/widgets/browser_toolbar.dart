@@ -8,13 +8,19 @@ class BrowserToolbar extends ConsumerStatefulWidget {
   const BrowserToolbar({
     super.key,
     this.tabCount = 1,
+    this.isPrivateMode = false,
     this.onTabsTapped,
     this.onDownloadsTapped,
+    this.onSettingsTapped,
+    this.onSiteInfoTapped,
   });
 
   final int tabCount;
+  final bool isPrivateMode;
   final VoidCallback? onTabsTapped;
   final VoidCallback? onDownloadsTapped;
+  final VoidCallback? onSettingsTapped;
+  final VoidCallback? onSiteInfoTapped;
 
   @override
   ConsumerState<BrowserToolbar> createState() => _BrowserToolbarState();
@@ -60,8 +66,14 @@ class _BrowserToolbarState extends ConsumerState<BrowserToolbar> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
-        color: cs.surface,
-        border: Border(bottom: BorderSide(color: cs.outlineVariant)),
+        color: widget.isPrivateMode ? cs.surface.withAlpha(230) : cs.surface,
+        border: Border(
+          bottom: BorderSide(
+            color: widget.isPrivateMode
+                ? cs.tertiary.withAlpha(100)
+                : cs.outlineVariant,
+          ),
+        ),
       ),
       child: SafeArea(
         bottom: false,
@@ -76,8 +88,9 @@ class _BrowserToolbarState extends ConsumerState<BrowserToolbar> {
             // Forward
             IconButton(
               icon: const Icon(Icons.arrow_forward, size: 20),
-              onPressed:
-                  state.canGoForward ? () => controller.goForward() : null,
+              onPressed: state.canGoForward
+                  ? () => controller.goForward()
+                  : null,
               tooltip: 'Forward',
             ),
             // Reload / Stop
@@ -86,11 +99,19 @@ class _BrowserToolbarState extends ConsumerState<BrowserToolbar> {
                 state.isLoading ? Icons.close : Icons.refresh,
                 size: 20,
               ),
-              onPressed: () =>
-                  state.isLoading ? controller.stopLoading() : controller.reload(),
+              onPressed: () => state.isLoading
+                  ? controller.stopLoading()
+                  : controller.reload(),
               tooltip: state.isLoading ? 'Stop' : 'Reload',
             ),
             const SizedBox(width: 4),
+
+            // Private mode indicator
+            if (widget.isPrivateMode)
+              Padding(
+                padding: const EdgeInsets.only(right: 4),
+                child: Icon(Icons.shield, size: 18, color: cs.tertiary),
+              ),
 
             // Omnibox
             Expanded(
@@ -135,8 +156,8 @@ class _BrowserToolbarState extends ConsumerState<BrowserToolbar> {
                 child: Text(
                   '${widget.tabCount}',
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -146,6 +167,20 @@ class _BrowserToolbarState extends ConsumerState<BrowserToolbar> {
               icon: const Icon(Icons.download, size: 20),
               tooltip: 'Downloads',
               onPressed: widget.onDownloadsTapped,
+            ),
+
+            // Site info button
+            IconButton(
+              icon: const Icon(Icons.info_outline, size: 20),
+              tooltip: 'Site info',
+              onPressed: widget.onSiteInfoTapped,
+            ),
+
+            // Settings button
+            IconButton(
+              icon: const Icon(Icons.settings, size: 20),
+              tooltip: 'Settings',
+              onPressed: widget.onSettingsTapped,
             ),
           ],
         ),

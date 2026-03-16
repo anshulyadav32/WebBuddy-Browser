@@ -12,6 +12,27 @@ enum SearchEngine {
   final String searchUrl;
 }
 
+/// Cookie acceptance policy.
+///
+/// ## Platform limitations
+///
+/// `webview_flutter` does not expose per-policy cookie controls on all
+/// platforms. On macOS/iOS the WKWebView `httpCookieAcceptPolicy` is not
+/// surfaced through the plugin. These values are therefore **best-effort**:
+///
+/// - [acceptAll] – default WebView behaviour (accept all cookies).
+/// - [blockThirdParty] – on platforms that support it the WebView will
+///   reject third-party cookies; elsewhere it falls back to [acceptAll].
+/// - [blockAll] – cookies are cleared on every navigation event.
+enum CookiePolicy {
+  acceptAll('Accept all'),
+  blockThirdParty('Block third-party'),
+  blockAll('Block all');
+
+  const CookiePolicy(this.label);
+  final String label;
+}
+
 /// Application-wide settings.
 class BrowserSettings {
   const BrowserSettings({
@@ -20,6 +41,9 @@ class BrowserSettings {
     this.adBlockEnabled = true,
     this.httpsUpgradeEnabled = true,
     this.homePage = 'about:blank',
+    this.javaScriptEnabled = true,
+    this.popUpBlockingEnabled = true,
+    this.cookiePolicy = CookiePolicy.acceptAll,
   });
 
   final ThemeMode themeMode;
@@ -27,6 +51,9 @@ class BrowserSettings {
   final bool adBlockEnabled;
   final bool httpsUpgradeEnabled;
   final String homePage;
+  final bool javaScriptEnabled;
+  final bool popUpBlockingEnabled;
+  final CookiePolicy cookiePolicy;
 
   BrowserSettings copyWith({
     ThemeMode? themeMode,
@@ -34,6 +61,9 @@ class BrowserSettings {
     bool? adBlockEnabled,
     bool? httpsUpgradeEnabled,
     String? homePage,
+    bool? javaScriptEnabled,
+    bool? popUpBlockingEnabled,
+    CookiePolicy? cookiePolicy,
   }) {
     return BrowserSettings(
       themeMode: themeMode ?? this.themeMode,
@@ -41,6 +71,9 @@ class BrowserSettings {
       adBlockEnabled: adBlockEnabled ?? this.adBlockEnabled,
       httpsUpgradeEnabled: httpsUpgradeEnabled ?? this.httpsUpgradeEnabled,
       homePage: homePage ?? this.homePage,
+      javaScriptEnabled: javaScriptEnabled ?? this.javaScriptEnabled,
+      popUpBlockingEnabled: popUpBlockingEnabled ?? this.popUpBlockingEnabled,
+      cookiePolicy: cookiePolicy ?? this.cookiePolicy,
     );
   }
 
@@ -51,6 +84,9 @@ class BrowserSettings {
     'adBlockEnabled': adBlockEnabled,
     'httpsUpgradeEnabled': httpsUpgradeEnabled,
     'homePage': homePage,
+    'javaScriptEnabled': javaScriptEnabled,
+    'popUpBlockingEnabled': popUpBlockingEnabled,
+    'cookiePolicy': cookiePolicy.index,
   };
 
   /// Deserialize from a `Map<String, dynamic>`.
@@ -61,6 +97,9 @@ class BrowserSettings {
       adBlockEnabled: map['adBlockEnabled'] as bool? ?? true,
       httpsUpgradeEnabled: map['httpsUpgradeEnabled'] as bool? ?? true,
       homePage: map['homePage'] as String? ?? 'about:blank',
+      javaScriptEnabled: map['javaScriptEnabled'] as bool? ?? true,
+      popUpBlockingEnabled: map['popUpBlockingEnabled'] as bool? ?? true,
+      cookiePolicy: CookiePolicy.values[map['cookiePolicy'] as int? ?? 0],
     );
   }
 
@@ -72,7 +111,10 @@ class BrowserSettings {
           searchEngine == other.searchEngine &&
           adBlockEnabled == other.adBlockEnabled &&
           httpsUpgradeEnabled == other.httpsUpgradeEnabled &&
-          homePage == other.homePage;
+          homePage == other.homePage &&
+          javaScriptEnabled == other.javaScriptEnabled &&
+          popUpBlockingEnabled == other.popUpBlockingEnabled &&
+          cookiePolicy == other.cookiePolicy;
 
   @override
   int get hashCode => Object.hash(
@@ -81,10 +123,14 @@ class BrowserSettings {
     adBlockEnabled,
     httpsUpgradeEnabled,
     homePage,
+    javaScriptEnabled,
+    popUpBlockingEnabled,
+    cookiePolicy,
   );
 
   @override
   String toString() =>
       'BrowserSettings(theme: $themeMode, search: $searchEngine, '
-      'adBlock: $adBlockEnabled, httpsUpgrade: $httpsUpgradeEnabled)';
+      'js: $javaScriptEnabled, popUp: $popUpBlockingEnabled, '
+      'cookie: $cookiePolicy)';
 }

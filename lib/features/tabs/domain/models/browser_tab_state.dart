@@ -15,10 +15,7 @@ class BrowserTabState {
 
   /// Creates a new tab with a generated UUID.
   factory BrowserTabState.create({bool isPrivate = false}) {
-    return BrowserTabState(
-      id: const Uuid().v4(),
-      isPrivate: isPrivate,
-    );
+    return BrowserTabState(id: const Uuid().v4(), isPrivate: isPrivate);
   }
 
   final String id;

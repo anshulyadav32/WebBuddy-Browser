@@ -8,12 +8,12 @@ import '../domain/download_item.dart';
 import '../domain/file_name_utils.dart';
 
 /// Callback for download progress updates.
-typedef DownloadProgressCallback = void Function(
-    String downloadId, int received, int total);
+typedef DownloadProgressCallback =
+    void Function(String downloadId, int received, int total);
 
 /// Callback when a download completes or fails.
-typedef DownloadCompleteCallback = void Function(
-    String downloadId, DownloadStatus status, String? savePath);
+typedef DownloadCompleteCallback =
+    void Function(String downloadId, DownloadStatus status, String? savePath);
 
 /// Manages actual file downloads using Dio.
 class DownloadService {

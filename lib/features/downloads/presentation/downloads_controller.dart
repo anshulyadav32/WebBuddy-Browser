@@ -18,16 +18,15 @@ final downloadServiceProvider = Provider<DownloadService>((ref) {
 
 final downloadsControllerProvider =
     StateNotifierProvider<DownloadsController, List<DownloadItem>>((ref) {
-  final repo = ref.watch(downloadsRepositoryProvider);
-  final service = ref.watch(downloadServiceProvider);
-  return DownloadsController(repo, service);
-});
+      final repo = ref.watch(downloadsRepositoryProvider);
+      final service = ref.watch(downloadServiceProvider);
+      return DownloadsController(repo, service);
+    });
 
 // ── Controller ───────────────────────────────────────────────────────
 
 class DownloadsController extends StateNotifier<List<DownloadItem>> {
-  DownloadsController(this._repo, this._service)
-      : super(_repo.loadAll());
+  DownloadsController(this._repo, this._service) : super(_repo.loadAll());
 
   final DownloadsRepository _repo;
   final DownloadService _service;
@@ -93,8 +92,11 @@ class DownloadsController extends StateNotifier<List<DownloadItem>> {
   /// Clears all completed, failed, and cancelled downloads.
   void clearFinished() {
     state = state
-        .where((item) => item.status == DownloadStatus.downloading ||
-            item.status == DownloadStatus.queued)
+        .where(
+          (item) =>
+              item.status == DownloadStatus.downloading ||
+              item.status == DownloadStatus.queued,
+        )
         .toList();
     _repo.saveAll(state);
   }

@@ -75,48 +75,48 @@ void main() {
 
   group('UrlUtils.normalise — URL normalisation', () {
     test('preserves existing https scheme', () {
-      expect(UrlUtils.normalise('https://example.com'),
-          'https://example.com');
+      expect(UrlUtils.normalise('https://example.com'), 'https://example.com');
     });
 
     test('preserves existing http scheme', () {
-      expect(UrlUtils.normalise('http://example.com'),
-          'http://example.com');
+      expect(UrlUtils.normalise('http://example.com'), 'http://example.com');
     });
 
     test('prepends https to bare domain', () {
-      expect(UrlUtils.normalise('example.com'),
-          'https://example.com');
+      expect(UrlUtils.normalise('example.com'), 'https://example.com');
     });
 
     test('prepends https to domain with port', () {
-      expect(UrlUtils.normalise('example.com:8080'),
-          'https://example.com:8080');
+      expect(
+        UrlUtils.normalise('example.com:8080'),
+        'https://example.com:8080',
+      );
     });
 
     test('prepends https to domain with path', () {
-      expect(UrlUtils.normalise('example.com/foo/bar'),
-          'https://example.com/foo/bar');
+      expect(
+        UrlUtils.normalise('example.com/foo/bar'),
+        'https://example.com/foo/bar',
+      );
     });
 
     test('preserves URL with query parameters', () {
-      expect(UrlUtils.normalise('https://example.com/search?q=test'),
-          'https://example.com/search?q=test');
+      expect(
+        UrlUtils.normalise('https://example.com/search?q=test'),
+        'https://example.com/search?q=test',
+      );
     });
 
     test('trims leading whitespace', () {
-      expect(UrlUtils.normalise('  example.com'),
-          'https://example.com');
+      expect(UrlUtils.normalise('  example.com'), 'https://example.com');
     });
 
     test('trims trailing whitespace', () {
-      expect(UrlUtils.normalise('example.com  '),
-          'https://example.com');
+      expect(UrlUtils.normalise('example.com  '), 'https://example.com');
     });
 
     test('trims surrounding whitespace', () {
-      expect(UrlUtils.normalise('  example.com  '),
-          'https://example.com');
+      expect(UrlUtils.normalise('  example.com  '), 'https://example.com');
     });
   });
 
@@ -124,13 +124,17 @@ void main() {
 
   group('UrlUtils.extractDomain', () {
     test('extracts domain stripping www', () {
-      expect(UrlUtils.extractDomain('https://www.example.com/path'),
-          'example.com');
+      expect(
+        UrlUtils.extractDomain('https://www.example.com/path'),
+        'example.com',
+      );
     });
 
     test('preserves domain without www', () {
-      expect(UrlUtils.extractDomain('https://example.co.uk/page'),
-          'example.co.uk');
+      expect(
+        UrlUtils.extractDomain('https://example.co.uk/page'),
+        'example.co.uk',
+      );
     });
 
     test('works with bare domain input', () {
@@ -147,16 +151,20 @@ void main() {
   group('UrlUtils.buildSearchUrl', () {
     test('encodes query into search URL', () {
       expect(
-        UrlUtils.buildSearchUrl('dart lang',
-            searchUrl: 'https://www.google.com/search?q='),
+        UrlUtils.buildSearchUrl(
+          'dart lang',
+          searchUrl: 'https://www.google.com/search?q=',
+        ),
         'https://www.google.com/search?q=dart+lang',
       );
     });
 
     test('encodes special characters', () {
       expect(
-        UrlUtils.buildSearchUrl('c++ tutorial',
-            searchUrl: 'https://www.google.com/search?q='),
+        UrlUtils.buildSearchUrl(
+          'c++ tutorial',
+          searchUrl: 'https://www.google.com/search?q=',
+        ),
         contains('c%2B%2B'),
       );
     });

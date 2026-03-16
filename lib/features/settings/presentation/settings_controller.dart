@@ -6,6 +6,8 @@ import '../../../core/services/storage_service.dart';
 import '../data/settings_repository.dart';
 import '../domain/browser_settings.dart';
 
+export '../domain/browser_settings.dart' show CookiePolicy;
+
 // ── Providers wiring ─────────────────────────────────────────────────
 final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
   // Overridden in main.dart before runApp.
@@ -57,6 +59,21 @@ class SettingsController extends Notifier<BrowserSettings> {
 
   Future<void> setHomePage(String url) async {
     state = state.copyWith(homePage: url);
+    await _repo.save(state);
+  }
+
+  Future<void> setJavaScriptEnabled(bool enabled) async {
+    state = state.copyWith(javaScriptEnabled: enabled);
+    await _repo.save(state);
+  }
+
+  Future<void> setPopUpBlockingEnabled(bool enabled) async {
+    state = state.copyWith(popUpBlockingEnabled: enabled);
+    await _repo.save(state);
+  }
+
+  Future<void> setCookiePolicy(CookiePolicy policy) async {
+    state = state.copyWith(cookiePolicy: policy);
     await _repo.save(state);
   }
 }

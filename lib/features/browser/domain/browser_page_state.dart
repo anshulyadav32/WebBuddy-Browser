@@ -47,13 +47,13 @@ class BrowserPageState {
 
   @override
   int get hashCode => Object.hash(
-        currentUrl,
-        title,
-        isLoading,
-        progress,
-        canGoBack,
-        canGoForward,
-      );
+    currentUrl,
+    title,
+    isLoading,
+    progress,
+    canGoBack,
+    canGoForward,
+  );
 
   @override
   String toString() =>

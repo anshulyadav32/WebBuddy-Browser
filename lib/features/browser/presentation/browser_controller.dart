@@ -8,12 +8,10 @@ import '../domain/browser_page_state.dart';
 
 // ── Provider ─────────────────────────────────────────────────────────
 final browserControllerProvider =
-    StateNotifierProvider<BrowserController, BrowserPageState>(
-  (ref) {
-    final settings = ref.watch(settingsControllerProvider);
-    return BrowserController(settings);
-  },
-);
+    StateNotifierProvider<BrowserController, BrowserPageState>((ref) {
+      final settings = ref.watch(settingsControllerProvider);
+      return BrowserController(settings);
+    });
 
 // ── Controller ───────────────────────────────────────────────────────
 class BrowserController extends StateNotifier<BrowserPageState> {
@@ -69,11 +67,7 @@ class BrowserController extends StateNotifier<BrowserPageState> {
   // ── Callbacks from WebView ───────────────────────────────────────
 
   void onPageStarted(String url) {
-    state = state.copyWith(
-      currentUrl: url,
-      isLoading: true,
-      progress: 0.0,
-    );
+    state = state.copyWith(currentUrl: url, isLoading: true, progress: 0.0);
   }
 
   void onPageFinished(String url) async {
@@ -92,10 +86,7 @@ class BrowserController extends StateNotifier<BrowserPageState> {
   }
 
   void onProgress(int percent) {
-    state = state.copyWith(
-      progress: percent / 100.0,
-      isLoading: percent < 100,
-    );
+    state = state.copyWith(progress: percent / 100.0, isLoading: percent < 100);
   }
 
   void onUrlChange(UrlChange change) async {

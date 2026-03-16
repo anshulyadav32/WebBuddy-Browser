@@ -25,9 +25,7 @@ class TabCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: isActive
-              ? cs.primaryContainer
-              : cs.surfaceContainerHighest,
+          color: isActive ? cs.primaryContainer : cs.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(12),
           border: isActive
               ? Border.all(color: cs.primary, width: 2)
@@ -61,9 +59,9 @@ class TabCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               tab.currentUrl,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: cs.onSurfaceVariant,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: cs.onSurfaceVariant),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),

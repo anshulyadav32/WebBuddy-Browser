@@ -1,30 +1,35 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../privacy/data/private_data_manager.dart';
+import '../../privacy/presentation/privacy_controller.dart';
 import '../domain/models/browser_tab_state.dart';
 import '../domain/models/tabs_state.dart';
 
 // ── Provider ─────────────────────────────────────────────────────────
 
-final tabsControllerProvider =
-    StateNotifierProvider<TabsController, TabsState>((ref) {
-  final initial = BrowserTabState.create();
-  return TabsController(
-    TabsState(tabs: [initial], activeTabId: initial.id),
-  );
-});
+final tabsControllerProvider = StateNotifierProvider<TabsController, TabsState>(
+  (ref) {
+    final initial = BrowserTabState.create();
+    final dataManager = ref.watch(privateDataManagerProvider);
+    return TabsController(
+      TabsState(tabs: [initial], activeTabId: initial.id),
+      dataManager: dataManager,
+    );
+  },
+);
 
 // ── Controller ───────────────────────────────────────────────────────
 
 class TabsController extends StateNotifier<TabsState> {
-  TabsController(super.state);
+  TabsController(super.state, {PrivateDataManager? dataManager})
+    : _dataManager = dataManager;
+
+  final PrivateDataManager? _dataManager;
 
   /// Opens a new tab and makes it active.
   void createNewTab({bool isPrivate = false}) {
     final tab = BrowserTabState.create(isPrivate: isPrivate);
-    state = state.copyWith(
-      tabs: [...state.tabs, tab],
-      activeTabId: tab.id,
-    );
+    state = state.copyWith(tabs: [...state.tabs, tab], activeTabId: tab.id);
   }
 
   /// Switches to the tab with [tabId].
@@ -37,19 +42,19 @@ class TabsController extends StateNotifier<TabsState> {
   /// Closes the tab with [tabId].
   /// If it was the active tab, selects an adjacent tab.
   /// If it was the last tab, creates a replacement.
+  /// Triggers private session cleanup when the last private tab closes.
   void closeTab(String tabId) {
     final index = state.tabs.indexWhere((t) => t.id == tabId);
     if (index == -1) return;
 
+    final closedTab = state.tabs[index];
     final remaining = [...state.tabs]..removeAt(index);
 
     // If no tabs left, create a replacement.
     if (remaining.isEmpty) {
       final replacement = BrowserTabState.create();
-      state = TabsState(
-        tabs: [replacement],
-        activeTabId: replacement.id,
-      );
+      state = TabsState(tabs: [replacement], activeTabId: replacement.id);
+      _checkPrivateSessionEnd(closedTab);
       return;
     }
 
@@ -61,6 +66,14 @@ class TabsController extends StateNotifier<TabsState> {
     }
 
     state = TabsState(tabs: remaining, activeTabId: newActiveId);
+    _checkPrivateSessionEnd(closedTab);
+  }
+
+  /// If the closed tab was private and no private tabs remain, clean up.
+  void _checkPrivateSessionEnd(BrowserTabState closedTab) {
+    if (closedTab.isPrivate && !state.hasPrivateTabs) {
+      _dataManager?.clearPrivateSessionData();
+    }
   }
 
   /// Updates the currently active tab's metadata.

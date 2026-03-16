@@ -50,16 +50,16 @@ class DownloadItem {
 
   /// Serialize to a flat map for persistence.
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'url': url,
-        'fileName': fileName,
-        'savePath': savePath,
-        'mimeType': mimeType,
-        'totalBytes': totalBytes,
-        'receivedBytes': receivedBytes,
-        'status': status.index,
-        'startedAt': startedAt.toIso8601String(),
-      };
+    'id': id,
+    'url': url,
+    'fileName': fileName,
+    'savePath': savePath,
+    'mimeType': mimeType,
+    'totalBytes': totalBytes,
+    'receivedBytes': receivedBytes,
+    'status': status.index,
+    'startedAt': startedAt.toIso8601String(),
+  };
 
   /// Deserialize from a flat map.
   factory DownloadItem.fromMap(Map<String, dynamic> map) {

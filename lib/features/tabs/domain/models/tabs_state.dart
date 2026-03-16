@@ -2,22 +2,24 @@ import 'browser_tab_state.dart';
 
 /// Holds the list of open tabs and which one is active.
 class TabsState {
-  const TabsState({
-    required this.tabs,
-    required this.activeTabId,
-  });
+  const TabsState({required this.tabs, required this.activeTabId});
 
   final List<BrowserTabState> tabs;
   final String activeTabId;
 
   /// Returns the currently active tab.
-  BrowserTabState get activeTab =>
-      tabs.firstWhere((t) => t.id == activeTabId);
+  BrowserTabState get activeTab => tabs.firstWhere((t) => t.id == activeTabId);
 
-  TabsState copyWith({
-    List<BrowserTabState>? tabs,
-    String? activeTabId,
-  }) {
+  /// Whether the active tab is a private tab.
+  bool get isActiveTabPrivate => activeTab.isPrivate;
+
+  /// Number of private tabs currently open.
+  int get privateTabCount => tabs.where((t) => t.isPrivate).length;
+
+  /// Whether any private tabs are open.
+  bool get hasPrivateTabs => tabs.any((t) => t.isPrivate);
+
+  TabsState copyWith({List<BrowserTabState>? tabs, String? activeTabId}) {
     return TabsState(
       tabs: tabs ?? this.tabs,
       activeTabId: activeTabId ?? this.activeTabId,

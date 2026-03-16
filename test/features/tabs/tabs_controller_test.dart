@@ -15,10 +15,7 @@ void main() {
       );
 
       controller = TabsController(
-        TabsState(
-          tabs: [initialTab],
-          activeTabId: initialTab.id,
-        ),
+        TabsState(tabs: [initialTab], activeTabId: initialTab.id),
       );
     });
 
@@ -31,10 +28,7 @@ void main() {
       controller.createNewTab();
 
       expect(controller.state.tabs.length, 2);
-      expect(
-        controller.state.activeTabId,
-        controller.state.tabs.last.id,
-      );
+      expect(controller.state.activeTabId, controller.state.tabs.last.id);
     });
 
     test('switchTab changes active tab', () {
@@ -69,10 +63,7 @@ void main() {
       controller.closeTab('tab1');
 
       expect(controller.state.tabs.length, 1);
-      expect(
-        controller.state.activeTabId,
-        controller.state.tabs.first.id,
-      );
+      expect(controller.state.activeTabId, controller.state.tabs.first.id);
     });
 
     test('updateActiveTab updates title and url', () {

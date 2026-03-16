@@ -10,9 +10,7 @@ abstract final class FileNameUtils {
   static String deriveFromUrl(String url, {String fallback = 'download'}) {
     try {
       final uri = Uri.parse(url);
-      final pathSegments = uri.pathSegments
-          .where((s) => s.isNotEmpty)
-          .toList();
+      final pathSegments = uri.pathSegments.where((s) => s.isNotEmpty).toList();
 
       if (pathSegments.isNotEmpty) {
         final last = pathSegments.last;

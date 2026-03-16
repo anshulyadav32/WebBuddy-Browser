@@ -169,8 +169,10 @@ void main() {
     });
 
     test('equal objects have same hashCode', () {
-      expect(const BrowserPageState().hashCode,
-          equals(const BrowserPageState().hashCode));
+      expect(
+        const BrowserPageState().hashCode,
+        equals(const BrowserPageState().hashCode),
+      );
     });
   });
 
@@ -211,15 +213,18 @@ void main() {
       expect(controller.state.isLoading, isFalse);
     });
 
-    test('onPageFinished sets loading false, progress 1, updates URL', () async {
-      controller.onPageFinished('https://dart.dev');
-      // onPageFinished is async — give microtasks time to complete.
-      await Future<void>.delayed(Duration.zero);
+    test(
+      'onPageFinished sets loading false, progress 1, updates URL',
+      () async {
+        controller.onPageFinished('https://dart.dev');
+        // onPageFinished is async — give microtasks time to complete.
+        await Future<void>.delayed(Duration.zero);
 
-      expect(controller.state.currentUrl, 'https://dart.dev');
-      expect(controller.state.isLoading, isFalse);
-      expect(controller.state.progress, 1.0);
-    });
+        expect(controller.state.currentUrl, 'https://dart.dev');
+        expect(controller.state.isLoading, isFalse);
+        expect(controller.state.progress, 1.0);
+      },
+    );
 
     test('loadInput with URL sets state and marks loading', () async {
       // No WebView attached, so loadRequest is a no-op, but state updates.
@@ -232,8 +237,10 @@ void main() {
     test('loadInput with search query builds search URL', () async {
       await controller.loadInput('flutter widgets');
 
-      expect(controller.state.currentUrl,
-          startsWith('https://www.google.com/search?q='));
+      expect(
+        controller.state.currentUrl,
+        startsWith('https://www.google.com/search?q='),
+      );
       expect(controller.state.currentUrl, contains('flutter'));
     });
 

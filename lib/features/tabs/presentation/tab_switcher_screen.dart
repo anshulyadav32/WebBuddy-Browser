@@ -18,6 +18,14 @@ class TabSwitcherScreen extends ConsumerWidget {
         title: const Text('Tabs'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.shield_outlined),
+            tooltip: 'New private tab',
+            onPressed: () {
+              controller.createNewTab(isPrivate: true);
+              Navigator.of(context).pop();
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.add),
             tooltip: 'New tab',
             onPressed: () {

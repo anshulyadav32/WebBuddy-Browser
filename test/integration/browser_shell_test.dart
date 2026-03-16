@@ -49,26 +49,50 @@ void main() {
     await tester.pumpAndSettle();
 
     // ── Toolbar chrome ─────────────────────────────────────────────
-    expect(find.byType(BrowserToolbar), findsOneWidget,
-        reason: 'Toolbar should be in the widget tree');
-    expect(find.byType(TextField), findsOneWidget,
-        reason: 'Omnibox text field should be visible');
-    expect(find.byIcon(Icons.arrow_back), findsOneWidget,
-        reason: 'Back button should be present');
-    expect(find.byIcon(Icons.arrow_forward), findsOneWidget,
-        reason: 'Forward button should be present');
-    expect(find.byIcon(Icons.refresh), findsOneWidget,
-        reason: 'Reload button should be present when idle');
+    expect(
+      find.byType(BrowserToolbar),
+      findsOneWidget,
+      reason: 'Toolbar should be in the widget tree',
+    );
+    expect(
+      find.byType(TextField),
+      findsOneWidget,
+      reason: 'Omnibox text field should be visible',
+    );
+    expect(
+      find.byIcon(Icons.arrow_back),
+      findsOneWidget,
+      reason: 'Back button should be present',
+    );
+    expect(
+      find.byIcon(Icons.arrow_forward),
+      findsOneWidget,
+      reason: 'Forward button should be present',
+    );
+    expect(
+      find.byIcon(Icons.refresh),
+      findsOneWidget,
+      reason: 'Reload button should be present when idle',
+    );
 
     // ── Progress bar ───────────────────────────────────────────────
-    expect(find.byType(BrowserProgressBar), findsOneWidget,
-        reason: 'Progress bar widget should be in the tree');
+    expect(
+      find.byType(BrowserProgressBar),
+      findsOneWidget,
+      reason: 'Progress bar widget should be in the tree',
+    );
     // Not loading → no visible indicator
-    expect(find.byType(LinearProgressIndicator), findsNothing,
-        reason: 'Indicator should be hidden when not loading');
+    expect(
+      find.byType(LinearProgressIndicator),
+      findsNothing,
+      reason: 'Indicator should be hidden when not loading',
+    );
 
     // ── Content area ───────────────────────────────────────────────
-    expect(find.text('WebView placeholder'), findsOneWidget,
-        reason: 'Content area should be rendered');
+    expect(
+      find.text('WebView placeholder'),
+      findsOneWidget,
+      reason: 'Content area should be rendered',
+    );
   });
 }

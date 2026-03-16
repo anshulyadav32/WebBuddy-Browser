@@ -14,12 +14,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: TabCard(
-            tab: tab,
-            isActive: true,
-            onTap: () {},
-            onClose: () {},
-          ),
+          body: TabCard(tab: tab, isActive: true, onTap: () {}, onClose: () {}),
         ),
       ),
     );
