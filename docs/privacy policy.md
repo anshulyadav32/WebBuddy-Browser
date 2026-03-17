@@ -77,7 +77,7 @@ We may update this Privacy Policy over time. Updates will be reflected by a new 
 For privacy questions, contact:
 
 - **Project:** WebBuddy Browser
-- **Email:** support@example.com
+- **Email:** email.anshulyadav@gmail.com
 
 ---
 

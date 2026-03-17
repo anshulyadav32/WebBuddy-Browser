@@ -203,6 +203,27 @@ flutter run
 flutter test
 ```
 
+### Google Play Signing Setup
+
+For Play Store releases, this project is configured for the recommended flow:
+
+- Google Play manages the app signing key (App Signing by Google Play).
+- The repository only uses a local upload key for release upload signing.
+
+Create `android/key.properties` from `android/key.properties.example` and fill your local values:
+
+```properties
+storePassword=...
+keyPassword=...
+keyAlias=upload
+storeFile=release-keystore.jks
+```
+
+Notes:
+
+- `android/key.properties` and keystore files are intentionally gitignored.
+- Release builds fail fast with a clear error if upload-key config is missing.
+
 ## Testing
 
 82+ test files across five categories:
