@@ -205,17 +205,22 @@ flutter test
 
 ## Testing
 
-67 tests across 6 test files:
+82+ test files across five categories:
 
-| File | Tests | Coverage |
-|------|-------|----------|
-| `url_utils_test.dart` | 16 | URL detection, normalization, domain extraction, scheme detection |
-| `filter_rule_test.dart` | 17 | Rule parsing (comments, domains, exceptions, cosmetic, options) |
-| `filter_engine_test.dart` | 9 | Engine loading, blocking, exceptions, third-party, cosmetic selectors |
-| `search_provider_test.dart` | 6 | Omnibox URL vs search resolution |
-| `browser_tab_test.dart` | 10 | Tab creation, session state, equality |
-| `settings_test.dart` | 4 | Defaults, copyWith, JSON serialization |
-| `widget_test.dart` | 2 | Tab switcher widget rendering |
+| Category | Files | Coverage |
+|----------|-------|----------|
+| Unit (core) | 4 | URL utils, domain utils, filename utils, clear browsing data |
+| Unit (features) | 36 | Models, controllers, repositories for all features |
+| Widget | 30 | Every screen and major widget, interaction testing |
+| Stability | 4 | Edge cases, invalid input, storage failures, smoke tests |
+| Integration | 6 | Full E2E flows, regression, private mode, settings + shields |
+
+See [TESTING.md](TESTING.md) for detailed testing guide, conventions, and instructions.
+
+```bash
+flutter test                                                    # all unit + widget + stability
+flutter test integration_test/<file> -d flutter-tester          # integration (headless)
+```
 
 ## Dependencies
 
@@ -233,6 +238,16 @@ flutter test
 | `uuid` | Unique IDs |
 | `intl` | Date formatting |
 | `logging` | Structured logging |
+
+## Documentation
+
+| Document | Purpose |
+|----------|---------|
+| [README.md](README.md) | Project overview, architecture, setup |
+| [ROADMAP.md](ROADMAP.md) | Feature roadmap and future plans |
+| [KNOWN_LIMITATIONS.md](KNOWN_LIMITATIONS.md) | Platform constraints and honest limitations |
+| [TESTING.md](TESTING.md) | Testing strategy, categories, and conventions |
+| [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md) | Beta release checklist for all platforms |
 
 ## License
 

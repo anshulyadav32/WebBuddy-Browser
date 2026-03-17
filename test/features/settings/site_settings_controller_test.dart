@@ -3,7 +3,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_buddy/core/services/storage_service.dart';
 import 'package:web_buddy/features/settings/data/site_settings_repository.dart';
 import 'package:web_buddy/features/settings/domain/site_permission.dart';
-import 'package:web_buddy/features/settings/domain/site_settings.dart';
 import 'package:web_buddy/features/settings/presentation/site_settings_controller.dart';
 
 void main() {

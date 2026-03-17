@@ -7,6 +7,7 @@ import 'package:web_buddy/features/browser/domain/browser_page_state.dart';
 import 'package:web_buddy/features/browser/presentation/browser_controller.dart';
 import 'package:web_buddy/features/browser/presentation/widgets/browser_toolbar.dart';
 import 'package:web_buddy/features/browser/presentation/widgets/browser_progress_bar.dart';
+import 'package:web_buddy/features/privacy/presentation/shields_controller.dart';
 import 'package:web_buddy/features/settings/presentation/settings_controller.dart';
 
 // ── Fake controller for widget tests (no real WebView) ───────────────
@@ -14,6 +15,15 @@ import 'package:web_buddy/features/settings/presentation/settings_controller.dar
 class FakeBrowserController extends StateNotifier<BrowserPageState>
     implements BrowserController {
   FakeBrowserController([super.initial = const BrowserPageState()]);
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => null;
+}
+
+class _FakeShieldsController extends StateNotifier<ShieldsState>
+    implements ShieldsController {
+  _FakeShieldsController()
+    : super(const ShieldsState(isInitialised: true, globalEnabled: true));
 
   @override
   dynamic noSuchMethod(Invocation invocation) => null;
@@ -27,6 +37,7 @@ Widget _testApp(Widget child, {BrowserPageState? state}) {
       browserControllerProvider.overrideWith(
         (ref) => FakeBrowserController(state ?? const BrowserPageState()),
       ),
+      shieldsControllerProvider.overrideWith((_) => _FakeShieldsController()),
     ],
     child: MaterialApp(home: child),
   );

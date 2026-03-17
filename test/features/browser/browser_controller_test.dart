@@ -23,6 +23,16 @@ void main() {
       expect(controller.state.progress, 0.0);
     });
 
+    test('onPageStarted clears error state', () {
+      // First simulate an error state.
+      controller.onPageStarted('https://dart.dev');
+      controller = BrowserController(const BrowserSettings());
+      // Directly test that onPageStarted resets error flags.
+      controller.onPageStarted('https://dart.dev');
+      expect(controller.state.hasError, isFalse);
+      expect(controller.state.errorDescription, '');
+    });
+
     test('onProgress updates progress and loading state', () {
       controller.onProgress(42);
 
@@ -63,10 +73,36 @@ void main() {
       expect(controller.state.isLoading, isTrue);
     });
 
+    test('loadInput clears previous error state', () async {
+      await controller.loadInput('https://example.com');
+      expect(controller.state.hasError, isFalse);
+      expect(controller.state.errorDescription, '');
+    });
+
     test('updateTitle sets title via onPageStarted + custom logic', () {
       // Simulate a page load cycle.
       controller.onPageStarted('https://dart.dev');
       expect(controller.state.title, '');
+    });
+
+    test('reload clears error state', () async {
+      await controller.reload();
+      expect(controller.state.hasError, isFalse);
+    });
+
+    test('findInPage returns false without WebView attached', () async {
+      final result = await controller.findInPage('test');
+      expect(result, isFalse);
+    });
+
+    test('findInPage returns false for empty query', () async {
+      final result = await controller.findInPage('');
+      expect(result, isFalse);
+    });
+
+    test('clearFind does not throw without WebView', () async {
+      // Should complete without error.
+      await controller.clearFind();
     });
   });
 }

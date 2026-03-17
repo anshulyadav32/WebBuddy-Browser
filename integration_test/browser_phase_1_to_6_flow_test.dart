@@ -9,11 +9,11 @@ import 'package:web_buddy/features/browser/presentation/browser_controller.dart'
 import 'package:web_buddy/features/browser/presentation/widgets/browser_toolbar.dart';
 import 'package:web_buddy/features/browser/presentation/widgets/browser_progress_bar.dart';
 import 'package:web_buddy/features/downloads/presentation/downloads_screen.dart';
+import 'package:web_buddy/features/privacy/data/private_data_manager.dart';
+import 'package:web_buddy/features/privacy/presentation/privacy_controller.dart';
 import 'package:web_buddy/features/privacy/presentation/widgets/private_mode_badge.dart';
 import 'package:web_buddy/features/settings/presentation/settings_controller.dart';
 import 'package:web_buddy/features/tabs/application/tabs_controller.dart';
-import 'package:web_buddy/features/tabs/domain/models/browser_tab_state.dart';
-import 'package:web_buddy/features/tabs/domain/models/tabs_state.dart';
 import 'package:web_buddy/features/tabs/presentation/tab_switcher_screen.dart';
 
 /// Fake controller so tests run without a real platform WebView.
@@ -22,7 +22,18 @@ class FakeBrowserController extends StateNotifier<BrowserPageState>
   FakeBrowserController() : super(const BrowserPageState());
 
   @override
+  Future<void> loadInput(String input) async {}
+
+  @override
   dynamic noSuchMethod(Invocation invocation) => null;
+}
+
+/// Fake that avoids platform channel calls for cookie/cache clearing.
+class _FakePrivateDataManager extends PrivateDataManager {
+  _FakePrivateDataManager() : super(cookieManager: null);
+
+  @override
+  Future<void> clearPrivateSessionData({dynamic webViewController}) async {}
 }
 
 /// End-to-end flow test covering the major features from Phases 1–6.
@@ -50,6 +61,9 @@ void main() {
             sharedPreferencesProvider.overrideWithValue(prefs),
             browserControllerProvider.overrideWith(
               (ref) => FakeBrowserController(),
+            ),
+            privateDataManagerProvider.overrideWithValue(
+              _FakePrivateDataManager(),
             ),
           ],
           child: MaterialApp(
@@ -148,7 +162,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(TabSwitcherScreen), findsOneWidget);
-      expect(find.text('Tabs'), findsOneWidget);
+      expect(find.textContaining('Tabs'), findsOneWidget);
       expect(
         find.byIcon(Icons.add),
         findsOneWidget,

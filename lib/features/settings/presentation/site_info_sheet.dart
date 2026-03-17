@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/utils/url_utils.dart';
-import '../domain/site_permission.dart';
 import 'site_settings_controller.dart';
 import 'widgets/settings_toggle_tile.dart';
 import 'widgets/site_permission_tile.dart';

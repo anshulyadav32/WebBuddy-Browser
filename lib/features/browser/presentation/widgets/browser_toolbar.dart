@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../privacy/presentation/shields_controller.dart';
 import '../browser_controller.dart';
 
 /// The address / omnibox toolbar with navigation controls.
@@ -13,6 +14,8 @@ class BrowserToolbar extends ConsumerStatefulWidget {
     this.onDownloadsTapped,
     this.onSettingsTapped,
     this.onSiteInfoTapped,
+    this.onShieldsTapped,
+    this.onPageActionsTapped,
   });
 
   final int tabCount;
@@ -21,6 +24,8 @@ class BrowserToolbar extends ConsumerStatefulWidget {
   final VoidCallback? onDownloadsTapped;
   final VoidCallback? onSettingsTapped;
   final VoidCallback? onSiteInfoTapped;
+  final VoidCallback? onShieldsTapped;
+  final VoidCallback? onPageActionsTapped;
 
   @override
   ConsumerState<BrowserToolbar> createState() => _BrowserToolbarState();
@@ -162,11 +167,21 @@ class _BrowserToolbarState extends ConsumerState<BrowserToolbar> {
               ),
             ),
 
+            // Shields button
+            _ShieldsIconButton(onTap: widget.onShieldsTapped),
+
             // Downloads button
             IconButton(
               icon: const Icon(Icons.download, size: 20),
               tooltip: 'Downloads',
               onPressed: widget.onDownloadsTapped,
+            ),
+
+            // Page actions button
+            IconButton(
+              icon: const Icon(Icons.more_vert, size: 20),
+              tooltip: 'Page actions',
+              onPressed: widget.onPageActionsTapped,
             ),
 
             // Site info button
@@ -185,6 +200,38 @@ class _BrowserToolbarState extends ConsumerState<BrowserToolbar> {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// A small shield icon that shows blocked-count badge.
+class _ShieldsIconButton extends ConsumerWidget {
+  const _ShieldsIconButton({this.onTap});
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final shieldsState = ref.watch(shieldsControllerProvider);
+    final cs = Theme.of(context).colorScheme;
+    final count = shieldsState.stats.totalBlocked;
+
+    return IconButton(
+      icon: Badge(
+        isLabelVisible: count > 0,
+        label: Text(
+          count > 99 ? '99+' : '$count',
+          style: const TextStyle(fontSize: 9),
+        ),
+        child: Icon(
+          shieldsState.isEffectivelyEnabled
+              ? Icons.shield
+              : Icons.shield_outlined,
+          size: 20,
+          color: shieldsState.isEffectivelyEnabled ? cs.primary : cs.outline,
+        ),
+      ),
+      tooltip: 'Shields',
+      onPressed: onTap,
     );
   }
 }

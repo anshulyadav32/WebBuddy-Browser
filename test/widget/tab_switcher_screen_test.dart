@@ -11,7 +11,8 @@ void main() {
 
     await tester.pump();
 
-    expect(find.text('Tabs'), findsOneWidget);
+    // Title is a Text.rich with 'Tabs' as first span.
+    expect(find.textContaining('Tabs'), findsOneWidget);
     expect(find.byIcon(Icons.add), findsOneWidget);
   });
 }

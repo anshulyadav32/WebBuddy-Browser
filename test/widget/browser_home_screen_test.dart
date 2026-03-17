@@ -6,10 +6,20 @@ import 'package:web_buddy/features/browser/domain/browser_page_state.dart';
 import 'package:web_buddy/features/browser/presentation/browser_controller.dart';
 import 'package:web_buddy/features/browser/presentation/widgets/browser_toolbar.dart';
 import 'package:web_buddy/features/browser/presentation/widgets/browser_progress_bar.dart';
+import 'package:web_buddy/features/privacy/presentation/shields_controller.dart';
 
 class _FakeBrowserController extends StateNotifier<BrowserPageState>
     implements BrowserController {
   _FakeBrowserController([super.initial = const BrowserPageState()]);
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => null;
+}
+
+class _FakeShieldsController extends StateNotifier<ShieldsState>
+    implements ShieldsController {
+  _FakeShieldsController()
+    : super(const ShieldsState(isInitialised: true, globalEnabled: true));
 
   @override
   dynamic noSuchMethod(Invocation invocation) => null;
@@ -21,6 +31,7 @@ Widget _testApp(Widget child, {BrowserPageState? state}) {
       browserControllerProvider.overrideWith(
         (ref) => _FakeBrowserController(state ?? const BrowserPageState()),
       ),
+      shieldsControllerProvider.overrideWith((_) => _FakeShieldsController()),
     ],
     child: MaterialApp(home: child),
   );
@@ -75,16 +86,19 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.byIcon(Icons.shield), findsOneWidget);
+      // Private mode indicator + shields button both show shield icon.
+      expect(find.byIcon(Icons.shield), findsWidgets);
     });
 
-    testWidgets('no shield icon in regular mode', (tester) async {
+    testWidgets('no private shield icon in regular mode', (tester) async {
       await tester.pumpWidget(
         _testApp(const Scaffold(body: BrowserToolbar(isPrivateMode: false))),
       );
       await tester.pumpAndSettle();
 
-      expect(find.byIcon(Icons.shield), findsNothing);
+      // Shields icon is still present (the shields button), but the private
+      // mode indicator is not — so exactly one shield icon.
+      expect(find.byIcon(Icons.shield), findsOneWidget);
     });
 
     testWidgets('downloads button visible', (tester) async {
@@ -92,6 +106,13 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.download), findsOneWidget);
+    });
+
+    testWidgets('page actions button visible', (tester) async {
+      await tester.pumpWidget(_testApp(const Scaffold(body: BrowserToolbar())));
+      await tester.pumpAndSettle();
+
+      expect(find.byIcon(Icons.more_vert), findsOneWidget);
     });
   });
 }

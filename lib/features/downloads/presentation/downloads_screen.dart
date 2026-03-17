@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:open_file/open_file.dart';
 
+import '../../browser/presentation/widgets/browser_empty_view.dart';
 import '../domain/download_item.dart';
 import 'downloads_controller.dart';
 import 'widgets/download_tile.dart';
@@ -41,29 +42,11 @@ class DownloadsScreen extends ConsumerWidget {
         ],
       ),
       body: downloads.isEmpty
-          ? Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.download_outlined,
-                    size: 64,
-                    color: Theme.of(context).colorScheme.outline,
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    'No downloads yet',
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-            )
+          ? const BrowserEmptyView.downloads()
           : ListView.separated(
               padding: const EdgeInsets.symmetric(vertical: 8),
               itemCount: downloads.length,
-              separatorBuilder: (_, __) => const Divider(height: 1),
+              separatorBuilder: (_, _) => const Divider(height: 1),
               itemBuilder: (context, index) {
                 // Reverse chronological order.
                 final item = downloads[downloads.length - 1 - index];

@@ -39,7 +39,13 @@ class BrowserController extends StateNotifier<BrowserPageState> {
             searchUrl: _settings.searchEngine.searchUrl,
           );
 
-    state = state.copyWith(currentUrl: url, isLoading: true, progress: 0.0);
+    state = state.copyWith(
+      currentUrl: url,
+      isLoading: true,
+      progress: 0.0,
+      hasError: false,
+      errorDescription: '',
+    );
     await _webViewController?.loadRequest(Uri.parse(url));
   }
 
@@ -56,6 +62,7 @@ class BrowserController extends StateNotifier<BrowserPageState> {
   }
 
   Future<void> reload() async {
+    state = state.copyWith(hasError: false, errorDescription: '');
     await _webViewController?.reload();
   }
 
@@ -64,10 +71,48 @@ class BrowserController extends StateNotifier<BrowserPageState> {
     state = state.copyWith(isLoading: false);
   }
 
+  // ── Find in page (best-effort via JavaScript) ────────────────────
+
+  /// Attempts to highlight text on the page using `window.find()`.
+  ///
+  /// **Platform limitation**: `window.find()` is a non-standard API
+  /// supported by most desktop browsers but may not work on all WebView
+  /// implementations. On Android WebView it is generally unsupported.
+  /// On iOS/macOS WKWebView support is partial. This is best-effort.
+  Future<bool> findInPage(String query) async {
+    if (_webViewController == null || query.isEmpty) return false;
+    try {
+      final escaped = query.replaceAll("'", "\\'").replaceAll('\\', '\\\\');
+      await _webViewController!.runJavaScript(
+        "window.find('$escaped', false, false, true)",
+      );
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// Clears find-in-page highlights by collapsing the selection.
+  Future<void> clearFind() async {
+    try {
+      await _webViewController?.runJavaScript(
+        'window.getSelection().removeAllRanges()',
+      );
+    } catch (_) {
+      // Ignore — best-effort.
+    }
+  }
+
   // ── Callbacks from WebView ───────────────────────────────────────
 
   void onPageStarted(String url) {
-    state = state.copyWith(currentUrl: url, isLoading: true, progress: 0.0);
+    state = state.copyWith(
+      currentUrl: url,
+      isLoading: true,
+      progress: 0.0,
+      hasError: false,
+      errorDescription: '',
+    );
   }
 
   void onPageFinished(String url) async {
@@ -97,6 +142,19 @@ class BrowserController extends StateNotifier<BrowserPageState> {
         currentUrl: change.url!,
         canGoBack: canBack,
         canGoForward: canFwd,
+      );
+    }
+  }
+
+  /// Called when the WebView encounters a resource error.
+  void onWebResourceError(WebResourceError error) {
+    // Only show error state for main-frame failures.
+    if (error.isForMainFrame ?? true) {
+      state = state.copyWith(
+        hasError: true,
+        isLoading: false,
+        errorDescription: error.description,
+        errorCode: error.errorCode,
       );
     }
   }

@@ -1,5 +1,20 @@
 # WebBuddy Roadmap
 
+## Phase 10 — Integration, Stability, and Release Testing ✅
+
+Completed. The browser is beta-ready with:
+
+- **Integration tests**: 6 E2E flow tests covering launch → tabs → bookmarks → history → private mode → settings → shields → error views → onboarding
+- **Regression tests**: Dedicated regression suite for tab lifecycle, empty states, toolbar rendering, and all screen navigation
+- **Stability hardening**: Edge-case tests for invalid URLs, malformed filter rules, corrupt storage, adversarial input, and private cleanup failures
+- **Smoke tests**: Every top-level screen and major widget verified to render without crashing
+- **Release documentation**: KNOWN_LIMITATIONS.md, TESTING.md, RELEASE_CHECKLIST.md
+- **Debug logging audit**: No noisy or sensitive logging in production code
+
+See [TESTING.md](TESTING.md) and [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md) for details.
+
+---
+
 ## Phase 2 — Enhanced Blocking (High Priority)
 
 ### Android Native Request Interception

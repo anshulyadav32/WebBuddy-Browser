@@ -7,6 +7,9 @@ class BrowserPageState {
     this.progress = 0.0,
     this.canGoBack = false,
     this.canGoForward = false,
+    this.hasError = false,
+    this.errorDescription = '',
+    this.errorCode = 0,
   });
 
   final String currentUrl;
@@ -15,6 +18,9 @@ class BrowserPageState {
   final double progress;
   final bool canGoBack;
   final bool canGoForward;
+  final bool hasError;
+  final String errorDescription;
+  final int errorCode;
 
   BrowserPageState copyWith({
     String? currentUrl,
@@ -23,6 +29,9 @@ class BrowserPageState {
     double? progress,
     bool? canGoBack,
     bool? canGoForward,
+    bool? hasError,
+    String? errorDescription,
+    int? errorCode,
   }) {
     return BrowserPageState(
       currentUrl: currentUrl ?? this.currentUrl,
@@ -31,6 +40,9 @@ class BrowserPageState {
       progress: progress ?? this.progress,
       canGoBack: canGoBack ?? this.canGoBack,
       canGoForward: canGoForward ?? this.canGoForward,
+      hasError: hasError ?? this.hasError,
+      errorDescription: errorDescription ?? this.errorDescription,
+      errorCode: errorCode ?? this.errorCode,
     );
   }
 
@@ -43,7 +55,10 @@ class BrowserPageState {
           isLoading == other.isLoading &&
           progress == other.progress &&
           canGoBack == other.canGoBack &&
-          canGoForward == other.canGoForward;
+          canGoForward == other.canGoForward &&
+          hasError == other.hasError &&
+          errorDescription == other.errorDescription &&
+          errorCode == other.errorCode;
 
   @override
   int get hashCode => Object.hash(
@@ -53,9 +68,12 @@ class BrowserPageState {
     progress,
     canGoBack,
     canGoForward,
+    hasError,
+    errorDescription,
+    errorCode,
   );
 
   @override
   String toString() =>
-      'BrowserPageState(url: $currentUrl, title: $title, loading: $isLoading)';
+      'BrowserPageState(url: $currentUrl, title: $title, loading: $isLoading, error: $hasError)';
 }
