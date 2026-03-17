@@ -50,73 +50,83 @@ class _BrowserHomeScreenState extends ConsumerState<BrowserHomeScreen> {
   Widget build(BuildContext context) {
     final tabsState = ref.watch(tabsControllerProvider);
     final browserState = ref.watch(browserControllerProvider);
+    final padding = MediaQuery.of(context).padding;
 
     return Scaffold(
-      body: Column(
-        children: [
-          BrowserToolbar(
-            tabCount: tabsState.tabs.length,
-            isPrivateMode: tabsState.isActiveTabPrivate,
-            onTabsTapped: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const TabSwitcherScreen()),
-              );
-            },
-            onDownloadsTapped: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const DownloadsScreen()),
-              );
-            },
-            onSettingsTapped: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const SettingsScreen()),
-              );
-            },
-            onSiteInfoTapped: () {
-              showModalBottomSheet(
-                context: context,
-                builder: (_) =>
-                    SiteInfoSheet(currentUrl: browserState.currentUrl),
-              );
-            },
-            onShieldsTapped: () {
-              showModalBottomSheet(
-                context: context,
-                builder: (_) => ShieldsPanel(
-                  onReload: () {
-                    ref.read(browserControllerProvider.notifier).reload();
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.only(bottom: padding.bottom),
+          child: Column(
+            children: [
+              BrowserToolbar(
+                tabCount: tabsState.tabs.length,
+                isPrivateMode: tabsState.isActiveTabPrivate,
+                onTabsTapped: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const TabSwitcherScreen(),
+                    ),
+                  );
+                },
+                onDownloadsTapped: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const DownloadsScreen()),
+                  );
+                },
+                onSettingsTapped: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const SettingsScreen()),
+                  );
+                },
+                onSiteInfoTapped: () {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (_) =>
+                        SiteInfoSheet(currentUrl: browserState.currentUrl),
+                  );
+                },
+                onShieldsTapped: () {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (_) => ShieldsPanel(
+                      onReload: () {
+                        ref.read(browserControllerProvider.notifier).reload();
+                      },
+                    ),
+                  );
+                },
+                onPageActionsTapped: _showPageActions,
+              ),
+              const BrowserProgressBar(),
+              // Find-in-page bar
+              if (_showFindBar)
+                FindInPageBar(
+                  onSearch: (query) {
+                    ref
+                        .read(browserControllerProvider.notifier)
+                        .findInPage(query);
+                  },
+                  onClose: _toggleFindBar,
+                  onClear: () {
+                    ref.read(browserControllerProvider.notifier).clearFind();
                   },
                 ),
-              );
-            },
-            onPageActionsTapped: _showPageActions,
+              // Main content: error view or webview
+              Expanded(
+                child: browserState.hasError
+                    ? BrowserErrorView(
+                        url: browserState.currentUrl,
+                        errorDescription: browserState.errorDescription,
+                        errorCode: browserState.errorCode,
+                        onRetry: () {
+                          ref.read(browserControllerProvider.notifier).reload();
+                        },
+                      )
+                    : const BrowserWebView(),
+              ),
+            ],
           ),
-          const BrowserProgressBar(),
-          // Find-in-page bar
-          if (_showFindBar)
-            FindInPageBar(
-              onSearch: (query) {
-                ref.read(browserControllerProvider.notifier).findInPage(query);
-              },
-              onClose: _toggleFindBar,
-              onClear: () {
-                ref.read(browserControllerProvider.notifier).clearFind();
-              },
-            ),
-          // Main content: error view or webview
-          Expanded(
-            child: browserState.hasError
-                ? BrowserErrorView(
-                    url: browserState.currentUrl,
-                    errorDescription: browserState.errorDescription,
-                    errorCode: browserState.errorCode,
-                    onRetry: () {
-                      ref.read(browserControllerProvider.notifier).reload();
-                    },
-                  )
-                : const BrowserWebView(),
-          ),
-        ],
+        ),
       ),
     );
   }
