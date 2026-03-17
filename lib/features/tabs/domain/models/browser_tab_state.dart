@@ -11,18 +11,21 @@ class BrowserTabState {
     this.canGoBack = false,
     this.canGoForward = false,
     this.isPrivate = false,
+    this.groupId,
   });
 
   /// Creates a new tab with a generated UUID and homepage.
   factory BrowserTabState.create({
     bool isPrivate = false,
     String homepage = 'about:blank',
+    String? groupId,
   }) {
     return BrowserTabState(
       id: const Uuid().v4(),
       currentUrl: homepage,
       title: 'New Tab',
       isPrivate: isPrivate,
+      groupId: groupId,
     );
   }
 
@@ -34,6 +37,7 @@ class BrowserTabState {
   final bool canGoBack;
   final bool canGoForward;
   final bool isPrivate;
+  final String? groupId;
 
   BrowserTabState copyWith({
     String? currentUrl,
@@ -43,6 +47,8 @@ class BrowserTabState {
     bool? canGoBack,
     bool? canGoForward,
     bool? isPrivate,
+    String? groupId,
+    bool clearGroup = false,
   }) {
     return BrowserTabState(
       id: id,
@@ -53,6 +59,7 @@ class BrowserTabState {
       canGoBack: canGoBack ?? this.canGoBack,
       canGoForward: canGoForward ?? this.canGoForward,
       isPrivate: isPrivate ?? this.isPrivate,
+      groupId: clearGroup ? null : (groupId ?? this.groupId),
     );
   }
 
@@ -67,7 +74,8 @@ class BrowserTabState {
           progress == other.progress &&
           canGoBack == other.canGoBack &&
           canGoForward == other.canGoForward &&
-          isPrivate == other.isPrivate;
+          isPrivate == other.isPrivate &&
+          groupId == other.groupId;
 
   @override
   int get hashCode => Object.hash(
@@ -79,6 +87,7 @@ class BrowserTabState {
         canGoBack,
         canGoForward,
         isPrivate,
+        groupId,
       );
 
   @override

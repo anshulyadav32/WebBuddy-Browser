@@ -90,10 +90,7 @@ void main() {
         controller.createNewTab(isPrivate: true);
 
         expect(controller.state.tabs.length, 3);
-        expect(
-          controller.state.tabs.where((t) => t.isPrivate).length,
-          2,
-        );
+        expect(controller.state.tabs.where((t) => t.isPrivate).length, 2);
       });
 
       test('hasPrivateTabs returns true when private tabs exist', () {
@@ -160,10 +157,7 @@ void main() {
         controller.closeTab(privateTab1);
 
         expect(controller.state.hasPrivateTabs, true);
-        expect(
-          controller.state.tabs.any((t) => t.id == privateTab2),
-          true,
-        );
+        expect(controller.state.tabs.any((t) => t.id == privateTab2), true);
       });
 
       test(
@@ -234,20 +228,17 @@ void main() {
         expect(controller.state.activeTab.isPrivate, false);
       });
 
-      test(
-        'restoring should preserve private tab flag',
-        () {
-          controller.createNewTab(isPrivate: true);
-          final privateTab = controller.state.activeTab;
+      test('restoring should preserve private tab flag', () {
+        controller.createNewTab(isPrivate: true);
+        final privateTab = controller.state.activeTab;
 
-          final restoredTab = privateTab.copyWith(
-            currentUrl: 'https://new-url.com',
-          );
+        final restoredTab = privateTab.copyWith(
+          currentUrl: 'https://new-url.com',
+        );
 
-          expect(restoredTab.isPrivate, true);
-          expect(restoredTab.currentUrl, 'https://new-url.com');
-        },
-      );
+        expect(restoredTab.isPrivate, true);
+        expect(restoredTab.currentUrl, 'https://new-url.com');
+      });
     });
   });
 }

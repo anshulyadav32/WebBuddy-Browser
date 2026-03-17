@@ -57,15 +57,9 @@ void main() {
     });
 
     test('BrowserTabState toString includes privacy status', () {
-      const privateTab = BrowserTabState(
-        id: 'tab-1',
-        isPrivate: true,
-      );
+      const privateTab = BrowserTabState(id: 'tab-1', isPrivate: true);
 
-      const normalTab = BrowserTabState(
-        id: 'tab-2',
-        isPrivate: false,
-      );
+      const normalTab = BrowserTabState(id: 'tab-2', isPrivate: false);
 
       // Verify state information is available
       expect(privateTab.isPrivate, true);
@@ -75,20 +69,14 @@ void main() {
     group('TabsState Private Tab Tracking', () {
       test('hasPrivateTabs returns true when private tabs exist', () {
         final privateTab = BrowserTabState.create(isPrivate: true);
-        final state = TabsState(
-          tabs: [privateTab],
-          activeTabId: privateTab.id,
-        );
+        final state = TabsState(tabs: [privateTab], activeTabId: privateTab.id);
 
         expect(state.hasPrivateTabs, true);
       });
 
       test('hasPrivateTabs returns false when only normal tabs exist', () {
         final normalTab = BrowserTabState.create(isPrivate: false);
-        final state = TabsState(
-          tabs: [normalTab],
-          activeTabId: normalTab.id,
-        );
+        final state = TabsState(tabs: [normalTab], activeTabId: normalTab.id);
 
         expect(state.hasPrivateTabs, false);
       });
@@ -145,10 +133,8 @@ void main() {
           activeTabId: normalTab1.id,
         );
 
-        final privateTabs =
-            state.tabs.where((t) => t.isPrivate).toList();
-        final normalTabs =
-            state.tabs.where((t) => !t.isPrivate).toList();
+        final privateTabs = state.tabs.where((t) => t.isPrivate).toList();
+        final normalTabs = state.tabs.where((t) => !t.isPrivate).toList();
 
         expect(privateTabs.length, 2);
         expect(normalTabs.length, 2);

@@ -19,10 +19,7 @@ void main() {
       isPrivate: false,
     );
 
-    Widget buildTabCard({
-      required BrowserTabState tab,
-      bool isActive = false,
-    }) {
+    Widget buildTabCard({required BrowserTabState tab, bool isActive = false}) {
       return MaterialApp(
         theme: ThemeData.light(),
         home: Scaffold(
@@ -50,7 +47,9 @@ void main() {
     });
 
     testWidgets('active private tab shows tertiary colors', (tester) async {
-      await tester.pumpWidget(buildTabCard(tab: testPrivateTab, isActive: true));
+      await tester.pumpWidget(
+        buildTabCard(tab: testPrivateTab, isActive: true),
+      );
 
       final container = find.byType(Container);
       expect(container, findsWidgets);
@@ -59,9 +58,12 @@ void main() {
       expect(find.text('Private Search'), findsOneWidget);
     });
 
-    testWidgets('inactive private tab shows muted tertiary colors',
-        (tester) async {
-      await tester.pumpWidget(buildTabCard(tab: testPrivateTab, isActive: false));
+    testWidgets('inactive private tab shows muted tertiary colors', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        buildTabCard(tab: testPrivateTab, isActive: false),
+      );
 
       expect(find.text('Private Search'), findsOneWidget);
       expect(find.byIcon(Icons.lock), findsOneWidget);
@@ -71,8 +73,9 @@ void main() {
       await tester.pumpWidget(buildTabCard(tab: testNormalTab, isActive: true));
 
       // Active tab should show a visual indicator (dot)
-      final circleFinders =
-          find.byWidgetPredicate((widget) => widget is Container);
+      final circleFinders = find.byWidgetPredicate(
+        (widget) => widget is Container,
+      );
       expect(circleFinders, findsWidgets);
     });
 
@@ -89,11 +92,7 @@ void main() {
     });
 
     testWidgets('untitled tab shows "Untitled" text', (tester) async {
-      const tab = BrowserTabState(
-        id: 'tab-1',
-        title: '',
-        isPrivate: true,
-      );
+      const tab = BrowserTabState(id: 'tab-1', title: '', isPrivate: true);
 
       await tester.pumpWidget(buildTabCard(tab: tab));
 
@@ -131,59 +130,68 @@ void main() {
       expect(find.byIcon(Icons.close), findsOneWidget);
     });
 
-    testWidgets('private tab semantic label includes "Private"', (tester) async {
-      await tester.pumpWidget(buildTabCard(tab: testPrivateTab, isActive: true));
+    testWidgets('private tab semantic label includes "Private"', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        buildTabCard(tab: testPrivateTab, isActive: true),
+      );
 
       // TabCard itself has the semantic label
       final tabCard = find.byType(TabCard);
       expect(tabCard, findsOneWidget);
-      
+
       // Verify semantic properties by looking for private indicator word
       expect(find.byIcon(Icons.lock), findsOneWidget);
     });
 
-    testWidgets('normal tab semantic label does not include "Private"',
-        (tester) async {
+    testWidgets('normal tab semantic label does not include "Private"', (
+      tester,
+    ) async {
       await tester.pumpWidget(buildTabCard(tab: testNormalTab, isActive: true));
 
       // Normal tab should not have lock icon
       expect(find.byIcon(Icons.lock), findsNothing);
     });
 
-    testWidgets('multiple tabs with mix of private and normal render correctly',
-        (tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: ThemeData.light(),
-          home: Scaffold(
-            body: ListView(
-              children: [
-                TabCard(
-                  tab: testNormalTab,
-                  isActive: true,
-                  onTap: () {},
-                  onClose: () {},
-                  onOpenInPrivate: () {},
-                ),
-                TabCard(
-                  tab: testPrivateTab,
-                  isActive: false,
-                  onTap: () {},
-                  onClose: () {},
-                  onOpenInPrivate: () {},
-                ),
-              ],
+    testWidgets(
+      'multiple tabs with mix of private and normal render correctly',
+      (tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: ThemeData.light(),
+            home: Scaffold(
+              body: ListView(
+                children: [
+                  TabCard(
+                    tab: testNormalTab,
+                    isActive: true,
+                    onTap: () {},
+                    onClose: () {},
+                    onOpenInPrivate: () {},
+                  ),
+                  TabCard(
+                    tab: testPrivateTab,
+                    isActive: false,
+                    onTap: () {},
+                    onClose: () {},
+                    onOpenInPrivate: () {},
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      );
+        );
 
-      expect(find.byType(TabCard), findsNWidgets(2));
-      expect(find.byIcon(Icons.lock), findsOneWidget); // Only private tab
-    });
+        expect(find.byType(TabCard), findsNWidgets(2));
+        expect(find.byIcon(Icons.lock), findsOneWidget); // Only private tab
+      },
+    );
 
     testWidgets('private tab animation works on state change', (tester) async {
-      await tester.pumpWidget(buildTabCard(tab: testPrivateTab, isActive: false));
+      await tester.pumpWidget(
+        buildTabCard(tab: testPrivateTab, isActive: false),
+      );
 
       expect(find.byType(AnimatedContainer), findsOneWidget);
     });

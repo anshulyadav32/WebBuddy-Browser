@@ -35,6 +35,20 @@ void main() {
       expect(loaded.first.title, 'Flutter');
     });
 
+    test('getAllBookmarks returns persisted items (Phase 4 API)', () async {
+      final bookmark = Bookmark(
+        id: '1',
+        url: 'https://flutter.dev',
+        title: 'Flutter',
+        createdAt: DateTime(2025, 1, 1),
+      );
+      await repo.saveBookmark(bookmark);
+
+      final loaded = await repo.getAllBookmarks();
+      expect(loaded.length, 1);
+      expect(loaded.first.url, 'https://flutter.dev');
+    });
+
     test('remove bookmark by URL', () async {
       final b1 = Bookmark(
         id: '1',
@@ -56,6 +70,19 @@ void main() {
       final loaded = repo.loadAll();
       expect(loaded.length, 1);
       expect(loaded.first.url, 'https://dart.dev');
+    });
+
+    test('deleteBookmark removes by URL (Phase 4 API)', () async {
+      final bookmark = Bookmark(
+        id: '1',
+        url: 'https://flutter.dev',
+        title: 'Flutter',
+        createdAt: DateTime(2025, 1, 1),
+      );
+      await repo.saveBookmark(bookmark);
+      await repo.deleteBookmark('https://flutter.dev');
+
+      expect(repo.loadAll(), isEmpty);
     });
 
     test('duplicate URL handling replaces existing bookmark', () async {
@@ -89,6 +116,18 @@ void main() {
       await repo.add(bookmark);
 
       expect(repo.isBookmarked('https://flutter.dev'), isTrue);
+    });
+
+    test('exists returns true for saved URL (Phase 4 API)', () async {
+      final bookmark = Bookmark(
+        id: '1',
+        url: 'https://flutter.dev',
+        title: 'Flutter',
+        createdAt: DateTime(2025, 1, 1),
+      );
+      await repo.saveBookmark(bookmark);
+
+      expect(await repo.exists('https://flutter.dev'), isTrue);
     });
 
     test('isBookmarked returns false for unknown URL', () {

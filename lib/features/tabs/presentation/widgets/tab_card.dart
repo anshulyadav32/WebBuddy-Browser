@@ -11,6 +11,7 @@ class TabCard extends StatelessWidget {
     required this.onTap,
     required this.onClose,
     required this.onOpenInPrivate,
+    this.groupLabel,
   });
 
   final BrowserTabState tab;
@@ -18,6 +19,7 @@ class TabCard extends StatelessWidget {
   final VoidCallback onTap;
   final VoidCallback onClose;
   final VoidCallback onOpenInPrivate;
+  final String? groupLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -122,6 +124,25 @@ class TabCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 6),
+              if (groupLabel != null && groupLabel!.isNotEmpty) ...[
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: cs.secondaryContainer,
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Text(
+                      groupLabel!,
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: cs.onSecondaryContainer,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 6),
+              ],
               Flexible(
                 child: Text(
                   tab.currentUrl.isNotEmpty ? tab.currentUrl : 'about:blank',

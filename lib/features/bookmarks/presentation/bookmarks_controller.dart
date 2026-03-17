@@ -25,41 +25,60 @@ class BookmarksController extends StateNotifier<List<Bookmark>> {
   final BookmarksRepository _repo;
 
   /// Reloads bookmarks from the repository.
-  void loadBookmarks() {
-    state = _repo.loadAll();
+  Future<void> loadBookmarks() async {
+    state = await _repo.getAllBookmarks();
   }
 
   /// Returns whether the given URL is bookmarked.
-  bool isBookmarked(String url) => state.any((b) => b.url == url);
+  Future<bool> isBookmarked(String url) async => _repo.exists(url);
+
+  /// Legacy sync helper for existing internal checks.
+  bool isBookmarkedSync(String url) => state.any((b) => b.url == url);
+
+  /// Adds a bookmark and refreshes state.
+  Future<void> addBookmark(Bookmark bookmark) async {
+    await _repo.saveBookmark(bookmark);
+    await loadBookmarks();
+  }
 
   /// Toggles a bookmark for the given URL.
   ///
   /// If the URL is already bookmarked, removes it.
   /// If not, adds it using the provided [title] (falls back to [url]).
-  Future<void> toggleBookmark(String url, {String? title}) async {
-    if (isBookmarked(url)) {
-      await _repo.removeByUrl(url);
+  Future<void> toggleBookmark({required String title, required String url}) async {
+    if (await isBookmarked(url)) {
+      await removeBookmarkByUrl(url);
     } else {
       final bookmark = Bookmark(
         id: const Uuid().v4(),
         url: url,
-        title: (title != null && title.isNotEmpty) ? title : url,
+        title: title.isNotEmpty ? title : url,
         createdAt: DateTime.now(),
       );
-      await _repo.add(bookmark);
+      await addBookmark(bookmark);
     }
-    state = _repo.loadAll();
+  }
+
+  /// Legacy API retained for compatibility with existing callers/tests.
+  Future<void> toggleBookmarkLegacy(String url, {String? title}) async {
+    await toggleBookmark(url: url, title: (title != null && title.isNotEmpty) ? title : url);
   }
 
   /// Removes a bookmark by URL.
-  Future<void> removeBookmark(String url) async {
-    await _repo.removeByUrl(url);
-    state = _repo.loadAll();
+  Future<void> removeBookmarkByUrl(String url) async {
+    await _repo.deleteBookmark(url);
+    await loadBookmarks();
   }
 
+  /// Legacy API retained for compatibility with existing callers/tests.
+  Future<void> removeBookmark(String url) => removeBookmarkByUrl(url);
+
   /// Clears all bookmarks.
-  Future<void> clearAll() async {
+  Future<void> clearAllBookmarks() async {
     await _repo.clearAll();
     state = [];
   }
+
+  /// Legacy API retained for compatibility with existing callers/tests.
+  Future<void> clearAll() => clearAllBookmarks();
 }

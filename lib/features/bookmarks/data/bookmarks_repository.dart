@@ -25,6 +25,11 @@ class BookmarksRepository {
     }
   }
 
+  /// Phase 4 API: async getter for all bookmarks.
+  Future<List<Bookmark>> getAllBookmarks() async {
+    return loadAll();
+  }
+
   /// Saves the full list of bookmarks.
   Future<void> saveAll(List<Bookmark> items) async {
     final encoded = jsonEncode(items.map(_bookmarkToMap).toList());
@@ -39,15 +44,30 @@ class BookmarksRepository {
     await saveAll(all);
   }
 
+  /// Phase 4 API: saves or replaces a bookmark by URL.
+  Future<void> saveBookmark(Bookmark bookmark) async {
+    await add(bookmark);
+  }
+
   /// Removes a bookmark by URL.
   Future<void> removeByUrl(String url) async {
     final all = loadAll().where((b) => b.url != url).toList();
     await saveAll(all);
   }
 
+  /// Phase 4 API: deletes a bookmark by URL.
+  Future<void> deleteBookmark(String url) async {
+    await removeByUrl(url);
+  }
+
   /// Whether a URL is bookmarked.
   bool isBookmarked(String url) {
     return loadAll().any((b) => b.url == url);
+  }
+
+  /// Phase 4 API: async existence check.
+  Future<bool> exists(String url) async {
+    return isBookmarked(url);
   }
 
   /// Clears all bookmarks.

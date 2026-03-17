@@ -1,7 +1,7 @@
 name: web_buddy
 description: "A privacy-focused, modern web browser built with Flutter."
 publish_to: 'none'
-version: 0.0.1+2
+version: 0.0.2+3
 
 environment:
   sdk: ^3.11.0
