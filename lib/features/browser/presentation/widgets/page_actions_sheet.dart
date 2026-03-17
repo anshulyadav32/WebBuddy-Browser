@@ -29,6 +29,9 @@ class PageActionsSheet extends StatelessWidget {
     this.onOpenDownloads,
     this.onOpenSiteInfo,
     this.onOpenShields,
+    this.onOpenSettings,
+    this.onSetDefaultHomePage,
+    this.onOpenHistory,
     this.longPressTargetUrl,
     this.longPressTargetType,
     this.onOpenLongPressTarget,
@@ -48,6 +51,9 @@ class PageActionsSheet extends StatelessWidget {
   final VoidCallback? onOpenDownloads;
   final VoidCallback? onOpenSiteInfo;
   final VoidCallback? onOpenShields;
+  final VoidCallback? onOpenSettings;
+  final VoidCallback? onSetDefaultHomePage;
+  final VoidCallback? onOpenHistory;
   final String? longPressTargetUrl;
   final String? longPressTargetType;
   final VoidCallback? onOpenLongPressTarget;
@@ -243,6 +249,33 @@ class PageActionsSheet extends StatelessWidget {
                       onTap: () {
                         Navigator.of(context).pop();
                         onOpenShields!();
+                      },
+                    ),
+                  if (onSetDefaultHomePage != null)
+                    _ActionTile(
+                      icon: Icons.home_outlined,
+                      label: 'Set as default home page',
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        onSetDefaultHomePage!();
+                      },
+                    ),
+                  if (onOpenHistory != null)
+                    _ActionTile(
+                      icon: Icons.history_rounded,
+                      label: 'History',
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        onOpenHistory!();
+                      },
+                    ),
+                  if (onOpenSettings != null)
+                    _ActionTile(
+                      icon: Icons.settings,
+                      label: 'Settings',
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        onOpenSettings!();
                       },
                     ),
                   if (longPressTargetUrl != null &&

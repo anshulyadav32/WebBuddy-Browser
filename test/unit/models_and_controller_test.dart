@@ -32,9 +32,9 @@ void main() {
       expect(s.httpsUpgradeEnabled, isTrue);
     });
 
-    test('has about:blank as home page', () {
+    test('has google.com as home page', () {
       const s = BrowserSettings();
-      expect(s.homePage, 'about:blank');
+      expect(s.homePage, 'https://google.com');
     });
   });
 

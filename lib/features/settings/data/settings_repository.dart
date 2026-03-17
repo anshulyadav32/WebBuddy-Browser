@@ -31,7 +31,7 @@ class SettingsRepository {
           SearchEngine.values[_storage.getInt(_Keys.searchEngine) ?? 0],
       adBlockEnabled: _storage.getBool(_Keys.adBlockEnabled) ?? true,
       httpsUpgradeEnabled: _storage.getBool(_Keys.httpsUpgradeEnabled) ?? true,
-      homePage: _storage.getString(_Keys.homePage) ?? 'about:blank',
+      homePage: _storage.getString(_Keys.homePage) ?? 'https://google.com',
       javaScriptEnabled: _storage.getBool(_Keys.javaScriptEnabled) ?? true,
       cacheEnabled: _storage.getBool(_Keys.cacheEnabled) ?? true,
       scrollbarsEnabled: _storage.getBool(_Keys.scrollbarsEnabled) ?? true,

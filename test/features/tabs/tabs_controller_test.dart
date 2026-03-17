@@ -83,5 +83,171 @@ void main() {
 
       expect(controller.state.activeTab.isPrivate, true);
     });
+
+    group('Private Tab Tests', () {
+      test('multiple private tabs can be created', () {
+        controller.createNewTab(isPrivate: true);
+        controller.createNewTab(isPrivate: true);
+
+        expect(controller.state.tabs.length, 3);
+        expect(
+          controller.state.tabs.where((t) => t.isPrivate).length,
+          2,
+        );
+      });
+
+      test('hasPrivateTabs returns true when private tabs exist', () {
+        controller.createNewTab(isPrivate: true);
+
+        expect(controller.state.hasPrivateTabs, true);
+      });
+
+      test('hasPrivateTabs returns false when no private tabs exist', () {
+        expect(controller.state.hasPrivateTabs, false);
+      });
+
+      test('can switch between private and normal tabs', () {
+        controller.createNewTab(isPrivate: true);
+        final privateTabId = controller.state.activeTab.id;
+
+        controller.createNewTab(isPrivate: false);
+        final normalTabId = controller.state.activeTab.id;
+
+        expect(controller.state.activeTab.isPrivate, false);
+
+        controller.switchTab(privateTabId);
+
+        expect(controller.state.activeTab.isPrivate, true);
+
+        controller.switchTab(normalTabId);
+
+        expect(controller.state.activeTab.isPrivate, false);
+      });
+
+      test('private tab with custom URL is created correctly', () {
+        controller.createNewTab(
+          isPrivate: true,
+          url: 'https://private.example.com',
+        );
+
+        final activeTab = controller.state.activeTab;
+
+        expect(activeTab.isPrivate, true);
+        expect(activeTab.currentUrl, 'https://private.example.com');
+      });
+
+      test('closing all private tabs removes them from tabs list', () {
+        controller.createNewTab(isPrivate: true);
+        final privateTab1 = controller.state.activeTab.id;
+
+        controller.createNewTab(isPrivate: true);
+        final privateTab2 = controller.state.activeTab.id;
+
+        controller.closeTab(privateTab1);
+        controller.closeTab(privateTab2);
+
+        expect(controller.state.hasPrivateTabs, false);
+        expect(controller.state.tabs.length, 1);
+      });
+
+      test('closing one private tab keeps others intact', () {
+        controller.createNewTab(isPrivate: true);
+        final privateTab1 = controller.state.activeTab.id;
+
+        controller.createNewTab(isPrivate: true);
+        final privateTab2 = controller.state.activeTab.id;
+
+        controller.closeTab(privateTab1);
+
+        expect(controller.state.hasPrivateTabs, true);
+        expect(
+          controller.state.tabs.any((t) => t.id == privateTab2),
+          true,
+        );
+      });
+
+      test(
+        'closing private tab when active switches to another available tab',
+        () {
+          controller.createNewTab(isPrivate: true);
+          final privateTabId = controller.state.activeTab.id;
+
+          expect(controller.state.activeTabId, privateTabId);
+
+          controller.closeTab(privateTabId);
+
+          expect(controller.state.activeTabId, 'tab1');
+        },
+      );
+
+      test('private tab deduplication works correctly', () {
+        controller.createNewTab(isPrivate: true, url: 'https://same.com');
+        final firstTabId = controller.state.activeTab.id;
+
+        // Try to create same private tab - should switch to existing
+        controller.createNewTab(isPrivate: true, url: 'https://same.com');
+
+        expect(controller.state.activeTabId, firstTabId);
+        expect(controller.state.tabs.length, 2); // Still 2 tabs total
+      });
+
+      test('private and normal tabs with same URL are separate', () {
+        const url = 'https://example.com';
+
+        controller.createNewTab(isPrivate: false, url: url);
+        final normalTabId = controller.state.activeTab.id;
+
+        controller.createNewTab(isPrivate: true, url: url);
+        final privateTabId = controller.state.activeTab.id;
+
+        expect(normalTabId, isNot(privateTabId));
+        expect(
+          controller.state.tabs.where((t) => t.currentUrl == url).length,
+          2,
+        );
+      });
+
+      test('private tab properties can be updated', () {
+        controller.createNewTab(isPrivate: true);
+        final tabId = controller.state.activeTab.id;
+
+        controller.updateActiveTab(
+          title: 'Private Search',
+          currentUrl: 'https://private-search.com',
+          isLoading: true,
+        );
+
+        final updatedTab = controller.state.activeTab;
+
+        expect(updatedTab.isPrivate, true);
+        expect(updatedTab.title, 'Private Search');
+        expect(updatedTab.currentUrl, 'https://private-search.com');
+        expect(updatedTab.isLoading, true);
+      });
+
+      test('normal tab remains normal after updates', () {
+        controller.updateActiveTab(
+          title: 'Normal Tab',
+          currentUrl: 'https://normal.com',
+        );
+
+        expect(controller.state.activeTab.isPrivate, false);
+      });
+
+      test(
+        'restoring should preserve private tab flag',
+        () {
+          controller.createNewTab(isPrivate: true);
+          final privateTab = controller.state.activeTab;
+
+          final restoredTab = privateTab.copyWith(
+            currentUrl: 'https://new-url.com',
+          );
+
+          expect(restoredTab.isPrivate, true);
+          expect(restoredTab.currentUrl, 'https://new-url.com');
+        },
+      );
+    });
   });
 }

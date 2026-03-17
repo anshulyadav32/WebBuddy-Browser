@@ -57,7 +57,9 @@ class SettingsScreen extends ConsumerWidget {
                 leading: const Icon(Icons.home_outlined),
                 title: const Text('Default home page'),
                 subtitle: Text(
-                  settings.homePage.isEmpty ? 'about:blank' : settings.homePage,
+                  settings.homePage.isEmpty
+                      ? 'https://google.com'
+                      : settings.homePage,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -171,9 +173,7 @@ class SettingsScreen extends ConsumerWidget {
     SettingsController controller,
     BrowserSettings settings,
   ) {
-    final textController = TextEditingController(
-      text: settings.homePage == 'about:blank' ? '' : settings.homePage,
-    );
+    final textController = TextEditingController(text: settings.homePage);
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -182,7 +182,7 @@ class SettingsScreen extends ConsumerWidget {
           controller: textController,
           keyboardType: TextInputType.url,
           decoration: const InputDecoration(
-            hintText: 'https://example.com  (leave empty for about:blank)',
+            hintText: 'https://google.com',
             prefixIcon: Icon(Icons.link),
           ),
           autocorrect: false,
@@ -195,8 +195,9 @@ class SettingsScreen extends ConsumerWidget {
           TextButton(
             onPressed: () async {
               final value = textController.text.trim();
-              await controller
-                  .setHomePage(value.isEmpty ? 'about:blank' : value);
+              await controller.setHomePage(
+                value.isEmpty ? 'https://google.com' : value,
+              );
               if (ctx.mounted) Navigator.pop(ctx);
             },
             child: const Text('Save'),

@@ -100,7 +100,9 @@ void main() {
       expect(find.byIcon(Icons.shield), findsNothing);
     });
 
-    testWidgets('downloads button moved into page actions menu', (tester) async {
+    testWidgets('downloads button moved into page actions menu', (
+      tester,
+    ) async {
       await tester.pumpWidget(_testApp(const Scaffold(body: BrowserToolbar())));
       await tester.pumpAndSettle();
 

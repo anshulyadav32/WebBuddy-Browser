@@ -24,9 +24,9 @@ void main() {
       expect(s.httpsUpgradeEnabled, isTrue);
     });
 
-    test('has about:blank as home page', () {
+    test('has google.com as home page', () {
       const s = BrowserSettings();
-      expect(s.homePage, 'about:blank');
+      expect(s.homePage, 'https://google.com');
     });
 
     test('has JavaScript enabled', () {
@@ -62,7 +62,7 @@ void main() {
       expect(updated.themeMode, ThemeMode.system);
       expect(updated.adBlockEnabled, true);
       expect(updated.httpsUpgradeEnabled, true);
-      expect(updated.homePage, 'about:blank');
+      expect(updated.homePage, 'https://google.com');
       expect(updated.javaScriptEnabled, true);
       expect(updated.popUpBlockingEnabled, true);
       expect(updated.cookiePolicy, CookiePolicy.acceptAll);

@@ -10,14 +10,12 @@ class BrowserToolbar extends ConsumerStatefulWidget {
     this.tabCount = 1,
     this.isPrivateMode = false,
     this.onTabsTapped,
-    this.onSettingsTapped,
     this.onPageActionsTapped,
   });
 
   final int tabCount;
   final bool isPrivateMode;
   final VoidCallback? onTabsTapped;
-  final VoidCallback? onSettingsTapped;
   final VoidCallback? onPageActionsTapped;
 
   @override
@@ -173,11 +171,6 @@ class _BrowserToolbarState extends ConsumerState<BrowserToolbar> {
                 icon: const Icon(Icons.more_vert, size: 20),
                 tooltip: 'Page actions',
                 onPressed: widget.onPageActionsTapped,
-              ),
-              IconButton(
-                icon: const Icon(Icons.settings, size: 20),
-                tooltip: 'Settings',
-                onPressed: widget.onSettingsTapped,
               ),
             ],
           ),

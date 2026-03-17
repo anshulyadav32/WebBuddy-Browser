@@ -11,10 +11,12 @@ import '../../browser/presentation/widgets/find_in_page_bar.dart';
 import '../../browser/presentation/widgets/page_actions_sheet.dart';
 import '../../downloads/presentation/downloads_screen.dart';
 import '../../downloads/presentation/downloads_controller.dart';
+import '../../history/presentation/history_screen.dart';
 import '../../offline/presentation/offline_pages_controller.dart';
 import '../../offline/presentation/offline_pages_screen.dart';
 import '../../privacy/presentation/shields_controller.dart';
 import '../../privacy/presentation/widgets/shields_panel.dart';
+import '../../settings/presentation/settings_controller.dart';
 import '../../settings/presentation/settings_screen.dart';
 import '../../settings/presentation/site_info_sheet.dart';
 import '../../tabs/application/tabs_controller.dart';
@@ -56,6 +58,9 @@ class _BrowserHomeScreenState extends ConsumerState<BrowserHomeScreen> {
         onOpenDownloads: _openDownloads,
         onOpenSiteInfo: _openSiteInfo,
         onOpenShields: _openShieldsPanel,
+        onOpenSettings: _openSettings,
+        onSetDefaultHomePage: _setCurrentAsDefaultHomePage,
+        onOpenHistory: _openHistory,
         longPressTargetUrl: state.lastLongPressUrl,
         longPressTargetType: state.lastLongPressType,
         onOpenLongPressTarget: state.lastLongPressUrl == null
@@ -126,6 +131,27 @@ class _BrowserHomeScreenState extends ConsumerState<BrowserHomeScreen> {
           ref.read(browserControllerProvider.notifier).reload();
         },
       ),
+    );
+  }
+
+  void _openSettings() {
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const SettingsScreen()));
+  }
+
+  void _openHistory() {
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const HistoryScreen()));
+  }
+
+  Future<void> _setCurrentAsDefaultHomePage() async {
+    final currentUrl = ref.read(browserControllerProvider).currentUrl;
+    await ref.read(settingsControllerProvider.notifier).setHomePage(currentUrl);
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Default home page set to $currentUrl')),
     );
   }
 
@@ -340,11 +366,6 @@ class _BrowserHomeScreenState extends ConsumerState<BrowserHomeScreen> {
                     MaterialPageRoute(
                       builder: (_) => const TabSwitcherScreen(),
                     ),
-                  );
-                },
-                onSettingsTapped: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const SettingsScreen()),
                   );
                 },
                 onPageActionsTapped: _showPageActions,
