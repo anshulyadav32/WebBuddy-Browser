@@ -53,6 +53,17 @@ class SettingsScreen extends ConsumerWidget {
                 labelOf: (e) => e.label,
                 onChanged: controller.setSearchEngine,
               ),
+              ListTile(
+                leading: const Icon(Icons.home_outlined),
+                title: const Text('Default home page'),
+                subtitle: Text(
+                  settings.homePage.isEmpty ? 'about:blank' : settings.homePage,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => _showHomePageDialog(context, controller, settings),
+              ),
             ],
           ),
 
@@ -66,6 +77,33 @@ class SettingsScreen extends ConsumerWidget {
                 subtitle: 'Disabling breaks most websites',
                 value: settings.javaScriptEnabled,
                 onChanged: controller.setJavaScriptEnabled,
+              ),
+              SettingsToggleTile(
+                icon: Icons.cached,
+                title: 'Use cache',
+                subtitle: 'When off, pages are loaded fresh more often',
+                value: settings.cacheEnabled,
+                onChanged: controller.setCacheEnabled,
+              ),
+              SettingsToggleTile(
+                icon: Icons.swap_vert,
+                title: 'Show scrollbars',
+                value: settings.scrollbarsEnabled,
+                onChanged: controller.setScrollbarsEnabled,
+              ),
+              ListTile(
+                leading: const Icon(Icons.smart_toy_outlined),
+                title: const Text('Custom user-agent'),
+                subtitle: Text(
+                  settings.customUserAgent.isEmpty
+                      ? 'Using default WebView user-agent'
+                      : settings.customUserAgent,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () =>
+                    _showUserAgentDialog(context, controller, settings),
               ),
               SettingsToggleTile(
                 icon: Icons.block,
@@ -123,6 +161,90 @@ class SettingsScreen extends ConsumerWidget {
           ),
 
           const SizedBox(height: 32),
+        ],
+      ),
+    );
+  }
+
+  void _showHomePageDialog(
+    BuildContext context,
+    SettingsController controller,
+    BrowserSettings settings,
+  ) {
+    final textController = TextEditingController(
+      text: settings.homePage == 'about:blank' ? '' : settings.homePage,
+    );
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Default home page'),
+        content: TextField(
+          controller: textController,
+          keyboardType: TextInputType.url,
+          decoration: const InputDecoration(
+            hintText: 'https://example.com  (leave empty for about:blank)',
+            prefixIcon: Icon(Icons.link),
+          ),
+          autocorrect: false,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              final value = textController.text.trim();
+              await controller
+                  .setHomePage(value.isEmpty ? 'about:blank' : value);
+              if (ctx.mounted) Navigator.pop(ctx);
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showUserAgentDialog(
+    BuildContext context,
+    SettingsController controller,
+    BrowserSettings settings,
+  ) {
+    final textController = TextEditingController(
+      text: settings.customUserAgent,
+    );
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Custom user-agent'),
+        content: TextField(
+          controller: textController,
+          minLines: 2,
+          maxLines: 4,
+          decoration: const InputDecoration(
+            hintText: 'Leave empty to use default user-agent',
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              await controller.setCustomUserAgent('');
+              if (ctx.mounted) Navigator.pop(ctx);
+            },
+            child: const Text('Reset'),
+          ),
+          FilledButton(
+            onPressed: () async {
+              await controller.setCustomUserAgent(textController.text);
+              if (ctx.mounted) Navigator.pop(ctx);
+            },
+            child: const Text('Save'),
+          ),
         ],
       ),
     );

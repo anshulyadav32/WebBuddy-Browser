@@ -12,7 +12,10 @@ void main() {
     });
 
     test('initial state has default BrowserPageState', () {
-      expect(controller.state, equals(const BrowserPageState()));
+      expect(
+        controller.state,
+        equals(const BrowserPageState(currentUrl: 'about:blank')),
+      );
     });
 
     test('onPageStarted sets URL, loading true, progress 0', () {

@@ -17,17 +17,6 @@ class _FakeSiteSettingsController
   dynamic noSuchMethod(Invocation invocation) => null;
 }
 
-Widget _testApp() {
-  return ProviderScope(
-    overrides: [
-      siteSettingsControllerProvider.overrideWith(
-        (_) => _FakeSiteSettingsController(),
-      ),
-    ],
-    child: const MaterialApp(home: SettingsScreen()),
-  );
-}
-
 void main() {
   setUp(() async {
     SharedPreferences.setMockInitialValues({});
@@ -54,6 +43,13 @@ void main() {
       expect(find.text('Appearance'), findsOneWidget);
       expect(find.text('Search'), findsOneWidget);
       expect(find.text('Content'), findsOneWidget);
+
+      // Scroll to Security (pushed down by additional Content items)
+      await tester.scrollUntilVisible(
+        find.text('Security'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
       expect(find.text('Security'), findsOneWidget);
 
       // Scroll down to reveal the Privacy & Data section

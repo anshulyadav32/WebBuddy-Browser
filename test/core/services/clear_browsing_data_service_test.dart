@@ -71,10 +71,7 @@ void main() {
       // Seed a site setting
       repo.save(const SiteSettings(domain: 'd.com', javaScriptEnabled: false));
 
-      final service = ClearBrowsingDataService(
-        cookieManager: null,
-        siteSettingsRepo: repo,
-      );
+      final service = ClearBrowsingDataService(siteSettingsRepo: repo);
 
       final result = await service.clear(
         const ClearDataOptions(siteSettings: true),
@@ -85,10 +82,7 @@ void main() {
     });
 
     test('skips cookies when no cookie manager and catches error', () async {
-      final service = ClearBrowsingDataService(
-        cookieManager: null,
-        siteSettingsRepo: repo,
-      );
+      final service = ClearBrowsingDataService(siteSettingsRepo: repo);
 
       // This should not throw — cookies require platform and will fail gracefully
       final result = await service.clear(const ClearDataOptions(cookies: true));
@@ -101,10 +95,7 @@ void main() {
     });
 
     test('returns all-false when no categories selected', () async {
-      final service = ClearBrowsingDataService(
-        cookieManager: null,
-        siteSettingsRepo: repo,
-      );
+      final service = ClearBrowsingDataService(siteSettingsRepo: repo);
 
       final result = await service.clear(const ClearDataOptions());
 
@@ -116,10 +107,7 @@ void main() {
     });
 
     test('cache and storage require a webViewController', () async {
-      final service = ClearBrowsingDataService(
-        cookieManager: null,
-        siteSettingsRepo: repo,
-      );
+      final service = ClearBrowsingDataService(siteSettingsRepo: repo);
 
       // Without a webViewController, cache+storage are skipped
       final result = await service.clear(

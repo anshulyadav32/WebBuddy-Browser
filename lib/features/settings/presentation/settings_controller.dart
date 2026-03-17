@@ -67,6 +67,21 @@ class SettingsController extends Notifier<BrowserSettings> {
     await _repo.save(state);
   }
 
+  Future<void> setCacheEnabled(bool enabled) async {
+    state = state.copyWith(cacheEnabled: enabled);
+    await _repo.save(state);
+  }
+
+  Future<void> setScrollbarsEnabled(bool enabled) async {
+    state = state.copyWith(scrollbarsEnabled: enabled);
+    await _repo.save(state);
+  }
+
+  Future<void> setCustomUserAgent(String userAgent) async {
+    state = state.copyWith(customUserAgent: userAgent.trim());
+    await _repo.save(state);
+  }
+
   Future<void> setPopUpBlockingEnabled(bool enabled) async {
     state = state.copyWith(popUpBlockingEnabled: enabled);
     await _repo.save(state);

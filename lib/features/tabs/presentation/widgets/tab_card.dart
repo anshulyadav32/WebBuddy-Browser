@@ -53,6 +53,7 @@ class TabCard extends StatelessWidget {
         onTap: onTap,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
+          constraints: const BoxConstraints(minHeight: 80),
           decoration: BoxDecoration(
             color: bgColor,
             borderRadius: BorderRadius.circular(12),
@@ -61,6 +62,7 @@ class TabCard extends StatelessWidget {
           padding: const EdgeInsets.all(12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Row(
                 children: [
@@ -87,7 +89,7 @@ class TabCard extends StatelessWidget {
                     ),
                   Expanded(
                     child: Text(
-                      tab.title,
+                      tab.title.isNotEmpty ? tab.title : 'Untitled',
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         fontWeight: isActive
                             ? FontWeight.w600
@@ -119,23 +121,27 @@ class TabCard extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 4),
-              Text(
-                tab.currentUrl,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodySmall?.copyWith(color: cs.onSurfaceVariant),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+              const SizedBox(height: 6),
+              Flexible(
+                child: Text(
+                  tab.currentUrl.isNotEmpty ? tab.currentUrl : 'about:blank',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(color: cs.onSurfaceVariant),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
               if (tab.isLoading) ...[
                 const SizedBox(height: 6),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(2),
-                  child: LinearProgressIndicator(
-                    value: tab.progress > 0 ? tab.progress : null,
-                    minHeight: 2,
-                    backgroundColor: cs.outlineVariant.withAlpha(60),
+                  child: SizedBox(
+                    height: 2,
+                    child: LinearProgressIndicator(
+                      value: tab.progress > 0 ? tab.progress : null,
+                      backgroundColor: cs.outlineVariant.withAlpha(60),
+                    ),
                   ),
                 ),
               ],

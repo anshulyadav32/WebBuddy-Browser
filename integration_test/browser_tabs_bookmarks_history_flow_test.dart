@@ -23,7 +23,7 @@ import 'package:web_buddy/features/tabs/application/tabs_controller.dart';
 import 'package:web_buddy/features/tabs/presentation/tab_switcher_screen.dart';
 
 class _FakePrivateDataManager extends PrivateDataManager {
-  _FakePrivateDataManager() : super(cookieManager: null);
+  _FakePrivateDataManager() : super();
 
   @override
   Future<void> clearPrivateSessionData({

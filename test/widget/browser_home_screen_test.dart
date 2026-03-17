@@ -96,16 +96,15 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // Shields icon is still present (the shields button), but the private
-      // mode indicator is not — so exactly one shield icon.
-      expect(find.byIcon(Icons.shield), findsOneWidget);
+      // No dedicated shields button in toolbar; only private mode shows shield.
+      expect(find.byIcon(Icons.shield), findsNothing);
     });
 
-    testWidgets('downloads button visible', (tester) async {
+    testWidgets('downloads button moved into page actions menu', (tester) async {
       await tester.pumpWidget(_testApp(const Scaffold(body: BrowserToolbar())));
       await tester.pumpAndSettle();
 
-      expect(find.byIcon(Icons.download), findsOneWidget);
+      expect(find.byIcon(Icons.download), findsNothing);
     });
 
     testWidgets('page actions button visible', (tester) async {

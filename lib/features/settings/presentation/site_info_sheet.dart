@@ -65,6 +65,25 @@ class SiteInfoSheet extends ConsumerWidget {
               ),
               const Divider(height: 24),
 
+              // ── Connection security ──────────────────────────────
+              Text('Connection', style: Theme.of(context).textTheme.titleSmall),
+              const SizedBox(height: 8),
+              ListTile(
+                leading: Icon(
+                  currentUrl.startsWith('https://')
+                      ? Icons.verified_user_outlined
+                      : Icons.warning_amber_rounded,
+                ),
+                title: Text(
+                  currentUrl.startsWith('https://')
+                      ? 'HTTPS connection'
+                      : 'Insecure connection',
+                ),
+                subtitle: const Text(
+                  'Certificate chain details are limited by current WebView plugin APIs.',
+                ),
+              ),
+
               // ── Per-site content controls ────────────────────────
               Text(
                 'Content settings',

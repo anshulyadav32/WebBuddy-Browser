@@ -18,9 +18,14 @@ abstract final class UrlUtils {
   }
 
   /// Ensures [input] has a scheme. Prepends `https://` when missing.
+  /// Passes through URLs that already have a valid scheme.
   static String normalise(String input) {
     final trimmed = input.trim();
-    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+    if (trimmed.startsWith('http://') ||
+        trimmed.startsWith('https://') ||
+        trimmed.startsWith('about:') ||
+        trimmed.startsWith('data:') ||
+        trimmed.startsWith('file:')) {
       return trimmed;
     }
     return 'https://$trimmed';

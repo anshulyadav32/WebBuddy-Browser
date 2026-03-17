@@ -10,6 +10,8 @@ class BrowserPageState {
     this.hasError = false,
     this.errorDescription = '',
     this.errorCode = 0,
+    this.lastLongPressUrl,
+    this.lastLongPressType,
   });
 
   final String currentUrl;
@@ -21,6 +23,8 @@ class BrowserPageState {
   final bool hasError;
   final String errorDescription;
   final int errorCode;
+  final String? lastLongPressUrl;
+  final String? lastLongPressType;
 
   BrowserPageState copyWith({
     String? currentUrl,
@@ -32,6 +36,9 @@ class BrowserPageState {
     bool? hasError,
     String? errorDescription,
     int? errorCode,
+    String? lastLongPressUrl,
+    String? lastLongPressType,
+    bool clearLastLongPress = false,
   }) {
     return BrowserPageState(
       currentUrl: currentUrl ?? this.currentUrl,
@@ -43,6 +50,12 @@ class BrowserPageState {
       hasError: hasError ?? this.hasError,
       errorDescription: errorDescription ?? this.errorDescription,
       errorCode: errorCode ?? this.errorCode,
+      lastLongPressUrl: clearLastLongPress
+          ? null
+          : (lastLongPressUrl ?? this.lastLongPressUrl),
+      lastLongPressType: clearLastLongPress
+          ? null
+          : (lastLongPressType ?? this.lastLongPressType),
     );
   }
 
@@ -58,7 +71,9 @@ class BrowserPageState {
           canGoForward == other.canGoForward &&
           hasError == other.hasError &&
           errorDescription == other.errorDescription &&
-          errorCode == other.errorCode;
+          errorCode == other.errorCode &&
+          lastLongPressUrl == other.lastLongPressUrl &&
+          lastLongPressType == other.lastLongPressType;
 
   @override
   int get hashCode => Object.hash(
@@ -71,6 +86,8 @@ class BrowserPageState {
     hasError,
     errorDescription,
     errorCode,
+    lastLongPressUrl,
+    lastLongPressType,
   );
 
   @override

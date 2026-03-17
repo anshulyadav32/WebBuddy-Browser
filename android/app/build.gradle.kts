@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.webbuddy.web_buddy"
+    namespace = "live.r_u.webbuddy"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -20,7 +20,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.webbuddy.web_buddy"
+        applicationId = "live.r_u.webbuddy"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

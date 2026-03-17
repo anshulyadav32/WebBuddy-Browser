@@ -122,11 +122,11 @@ void main() {
       expect(state.tabs.where((t) => t.id == state.activeTabId), isEmpty);
     });
 
-    test('isActiveTabPrivate with no matching tab throws', () {
+    test('isActiveTabPrivate with no matching tab falls back to first tab', () {
       final tab = BrowserTabState.create();
       final state = TabsState(tabs: [tab], activeTabId: 'ghost');
-      // activeTab uses firstWhere which throws when no match exists
-      expect(() => state.isActiveTabPrivate, throwsStateError);
+      // activeTab falls back to tabs.first, so returns first tab's isPrivate
+      expect(state.isActiveTabPrivate, isFalse);
     });
   });
 

@@ -36,7 +36,7 @@ class _FakeShieldsController extends StateNotifier<ShieldsState>
 
 /// Fake that avoids platform channel calls for cookie/cache clearing.
 class _FakePrivateDataManager extends PrivateDataManager {
-  _FakePrivateDataManager() : super(cookieManager: null);
+  _FakePrivateDataManager() : super();
 
   @override
   Future<void> clearPrivateSessionData({

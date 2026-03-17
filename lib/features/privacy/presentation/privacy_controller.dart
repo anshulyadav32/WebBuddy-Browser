@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../tabs/application/tabs_controller.dart';
 import '../data/private_data_manager.dart';

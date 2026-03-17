@@ -42,6 +42,9 @@ class BrowserSettings {
     this.httpsUpgradeEnabled = true,
     this.homePage = 'about:blank',
     this.javaScriptEnabled = true,
+    this.cacheEnabled = true,
+    this.scrollbarsEnabled = true,
+    this.customUserAgent = '',
     this.popUpBlockingEnabled = true,
     this.cookiePolicy = CookiePolicy.acceptAll,
   });
@@ -52,6 +55,9 @@ class BrowserSettings {
   final bool httpsUpgradeEnabled;
   final String homePage;
   final bool javaScriptEnabled;
+  final bool cacheEnabled;
+  final bool scrollbarsEnabled;
+  final String customUserAgent;
   final bool popUpBlockingEnabled;
   final CookiePolicy cookiePolicy;
 
@@ -62,6 +68,9 @@ class BrowserSettings {
     bool? httpsUpgradeEnabled,
     String? homePage,
     bool? javaScriptEnabled,
+    bool? cacheEnabled,
+    bool? scrollbarsEnabled,
+    String? customUserAgent,
     bool? popUpBlockingEnabled,
     CookiePolicy? cookiePolicy,
   }) {
@@ -72,6 +81,9 @@ class BrowserSettings {
       httpsUpgradeEnabled: httpsUpgradeEnabled ?? this.httpsUpgradeEnabled,
       homePage: homePage ?? this.homePage,
       javaScriptEnabled: javaScriptEnabled ?? this.javaScriptEnabled,
+      cacheEnabled: cacheEnabled ?? this.cacheEnabled,
+      scrollbarsEnabled: scrollbarsEnabled ?? this.scrollbarsEnabled,
+      customUserAgent: customUserAgent ?? this.customUserAgent,
       popUpBlockingEnabled: popUpBlockingEnabled ?? this.popUpBlockingEnabled,
       cookiePolicy: cookiePolicy ?? this.cookiePolicy,
     );
@@ -85,6 +97,9 @@ class BrowserSettings {
     'httpsUpgradeEnabled': httpsUpgradeEnabled,
     'homePage': homePage,
     'javaScriptEnabled': javaScriptEnabled,
+    'cacheEnabled': cacheEnabled,
+    'scrollbarsEnabled': scrollbarsEnabled,
+    'customUserAgent': customUserAgent,
     'popUpBlockingEnabled': popUpBlockingEnabled,
     'cookiePolicy': cookiePolicy.index,
   };
@@ -98,6 +113,9 @@ class BrowserSettings {
       httpsUpgradeEnabled: map['httpsUpgradeEnabled'] as bool? ?? true,
       homePage: map['homePage'] as String? ?? 'about:blank',
       javaScriptEnabled: map['javaScriptEnabled'] as bool? ?? true,
+      cacheEnabled: map['cacheEnabled'] as bool? ?? true,
+      scrollbarsEnabled: map['scrollbarsEnabled'] as bool? ?? true,
+      customUserAgent: map['customUserAgent'] as String? ?? '',
       popUpBlockingEnabled: map['popUpBlockingEnabled'] as bool? ?? true,
       cookiePolicy: CookiePolicy.values[map['cookiePolicy'] as int? ?? 0],
     );
@@ -113,6 +131,9 @@ class BrowserSettings {
           httpsUpgradeEnabled == other.httpsUpgradeEnabled &&
           homePage == other.homePage &&
           javaScriptEnabled == other.javaScriptEnabled &&
+          cacheEnabled == other.cacheEnabled &&
+          scrollbarsEnabled == other.scrollbarsEnabled &&
+          customUserAgent == other.customUserAgent &&
           popUpBlockingEnabled == other.popUpBlockingEnabled &&
           cookiePolicy == other.cookiePolicy;
 
@@ -124,6 +145,9 @@ class BrowserSettings {
     httpsUpgradeEnabled,
     homePage,
     javaScriptEnabled,
+    cacheEnabled,
+    scrollbarsEnabled,
+    customUserAgent,
     popUpBlockingEnabled,
     cookiePolicy,
   );

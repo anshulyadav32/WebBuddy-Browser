@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import 'browser_tab_state.dart';
 
 /// Holds the list of open tabs and which one is active.
@@ -7,8 +9,12 @@ class TabsState {
   final List<BrowserTabState> tabs;
   final String activeTabId;
 
-  /// Returns the currently active tab.
-  BrowserTabState get activeTab => tabs.firstWhere((t) => t.id == activeTabId);
+  /// Returns the currently active tab, falling back to the first tab if the
+  /// active ID is stale (e.g. after state restoration).
+  BrowserTabState get activeTab => tabs.firstWhere(
+        (t) => t.id == activeTabId,
+        orElse: () => tabs.first,
+      );
 
   /// Whether the active tab is a private tab.
   bool get isActiveTabPrivate => activeTab.isPrivate;
@@ -31,10 +37,10 @@ class TabsState {
       identical(this, other) ||
       other is TabsState &&
           activeTabId == other.activeTabId &&
-          tabs.length == other.tabs.length;
+          listEquals(tabs, other.tabs);
 
   @override
-  int get hashCode => Object.hash(activeTabId, tabs.length);
+  int get hashCode => Object.hash(activeTabId, Object.hashAll(tabs));
 
   @override
   String toString() =>

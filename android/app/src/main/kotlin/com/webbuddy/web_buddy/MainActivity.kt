@@ -1,4 +1,4 @@
-package com.webbuddy.web_buddy
+package live.r_u.webbuddy
 
 import io.flutter.embedding.android.FlutterActivity
 

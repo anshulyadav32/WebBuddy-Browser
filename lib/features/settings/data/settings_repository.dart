@@ -11,6 +11,9 @@ abstract final class _Keys {
   static const httpsUpgradeEnabled = 'settings.httpsUpgradeEnabled';
   static const homePage = 'settings.homePage';
   static const javaScriptEnabled = 'settings.javaScriptEnabled';
+  static const cacheEnabled = 'settings.cacheEnabled';
+  static const scrollbarsEnabled = 'settings.scrollbarsEnabled';
+  static const customUserAgent = 'settings.customUserAgent';
   static const popUpBlockingEnabled = 'settings.popUpBlockingEnabled';
   static const cookiePolicy = 'settings.cookiePolicy';
 }
@@ -30,6 +33,9 @@ class SettingsRepository {
       httpsUpgradeEnabled: _storage.getBool(_Keys.httpsUpgradeEnabled) ?? true,
       homePage: _storage.getString(_Keys.homePage) ?? 'about:blank',
       javaScriptEnabled: _storage.getBool(_Keys.javaScriptEnabled) ?? true,
+      cacheEnabled: _storage.getBool(_Keys.cacheEnabled) ?? true,
+      scrollbarsEnabled: _storage.getBool(_Keys.scrollbarsEnabled) ?? true,
+      customUserAgent: _storage.getString(_Keys.customUserAgent) ?? '',
       popUpBlockingEnabled:
           _storage.getBool(_Keys.popUpBlockingEnabled) ?? true,
       cookiePolicy:
@@ -45,6 +51,9 @@ class SettingsRepository {
       _storage.setBool(_Keys.httpsUpgradeEnabled, s.httpsUpgradeEnabled),
       _storage.setString(_Keys.homePage, s.homePage),
       _storage.setBool(_Keys.javaScriptEnabled, s.javaScriptEnabled),
+      _storage.setBool(_Keys.cacheEnabled, s.cacheEnabled),
+      _storage.setBool(_Keys.scrollbarsEnabled, s.scrollbarsEnabled),
+      _storage.setString(_Keys.customUserAgent, s.customUserAgent),
       _storage.setBool(_Keys.popUpBlockingEnabled, s.popUpBlockingEnabled),
       _storage.setInt(_Keys.cookiePolicy, s.cookiePolicy.index),
     ]);

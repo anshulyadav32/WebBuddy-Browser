@@ -1,5 +1,4 @@
-import 'package:webview_flutter/webview_flutter.dart';
-
+import '../../features/browser/platform/platform_webview_controller.dart';
 import '../../features/settings/data/site_settings_repository.dart';
 
 /// What categories of data to clear.
@@ -30,23 +29,18 @@ class ClearDataOptions {
 ///
 /// ## Platform limitations
 ///
-/// - **Cookies**: Cleared via `WebViewCookieManager.clearCookies()`.
-///   On macOS/iOS this clears WKWebView cookies globally.
 /// - **Cache**: Cleared via JavaScript `caches.delete()` in the current
-///   WebView. True HTTP cache clearing is not exposed by `webview_flutter`.
+///   WebView. True HTTP cache clearing is not exposed by the WebView APIs.
 /// - **Local / session storage**: Cleared via JavaScript in the current
-///   WebView instance only. Other WebView instances are not affected until
-///   they are also cleared.
+///   WebView instance only.
 /// - **Site settings**: Removed from SharedPreferences via the repository.
 /// - **Bookmarks** are preserved by default and can only be cleared by
 ///   explicit user action through a separate flow.
 class ClearBrowsingDataService {
   ClearBrowsingDataService({
-    WebViewCookieManager? cookieManager,
     required this.siteSettingsRepo,
-  }) : _cookieManager = cookieManager;
+  });
 
-  final WebViewCookieManager? _cookieManager;
   final SiteSettingsRepository siteSettingsRepo;
 
   /// Executes the clearing operation for each enabled category.
@@ -54,20 +48,12 @@ class ClearBrowsingDataService {
   /// Pass an active [webViewController] to clear cache/storage via JS.
   Future<ClearDataResult> clear(
     ClearDataOptions options, {
-    WebViewController? webViewController,
+    PlatformWebViewController? webViewController,
   }) async {
     var cookiesCleared = false;
     var cacheCleared = false;
     var storageCleared = false;
     var siteSettingsCleared = false;
-
-    if (options.cookies) {
-      try {
-        final cm = _cookieManager ?? WebViewCookieManager();
-        await cm.clearCookies();
-        cookiesCleared = true;
-      } catch (_) {}
-    }
 
     if (options.cache && webViewController != null) {
       try {

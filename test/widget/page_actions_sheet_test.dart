@@ -102,15 +102,61 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: PageActionsSheet(
-              url: 'https://example.com',
-              title: '',
-            ),
+            body: PageActionsSheet(url: 'https://example.com', title: ''),
           ),
         ),
       );
 
       expect(find.text('Untitled'), findsOneWidget);
+    });
+
+    testWidgets('renders advanced browser tools actions', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: PageActionsSheet(
+              url: 'https://example.com',
+              title: 'Example',
+              onSaveOffline: () {},
+              onShowSslInfo: () {},
+              onDeveloperConsole: () {},
+              onInspectSiteData: () {},
+              onInspectNetwork: () {},
+              onOpenOfflinePages: () {},
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Save page offline'), findsOneWidget);
+      expect(find.text('View SSL details'), findsOneWidget);
+      expect(find.text('Developer console'), findsOneWidget);
+      expect(find.text('Inspect cookies & storage'), findsOneWidget);
+      expect(find.text('Network info'), findsOneWidget);
+      expect(find.text('Offline pages'), findsOneWidget);
+    });
+
+    testWidgets('renders long-press actions when target exists', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: PageActionsSheet(
+              url: 'https://example.com',
+              title: 'Example',
+              longPressTargetUrl: 'https://example.com/image.jpg',
+              longPressTargetType: 'image',
+              onOpenLongPressTarget: () {},
+              onDownloadLongPressTarget: () {},
+            ),
+          ),
+        ),
+      );
+
+      expect(find.textContaining('Last long-press target'), findsOneWidget);
+      expect(find.text('Open long-press target'), findsOneWidget);
+      expect(find.text('Download long-press target'), findsOneWidget);
     });
   });
 }

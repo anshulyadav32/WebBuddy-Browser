@@ -58,10 +58,28 @@ class BrowserTabState {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is BrowserTabState && other.id == id;
+      identical(this, other) ||
+      other is BrowserTabState &&
+          id == other.id &&
+          currentUrl == other.currentUrl &&
+          title == other.title &&
+          isLoading == other.isLoading &&
+          progress == other.progress &&
+          canGoBack == other.canGoBack &&
+          canGoForward == other.canGoForward &&
+          isPrivate == other.isPrivate;
 
   @override
-  int get hashCode => id.hashCode;
+  int get hashCode => Object.hash(
+        id,
+        currentUrl,
+        title,
+        isLoading,
+        progress,
+        canGoBack,
+        canGoForward,
+        isPrivate,
+      );
 
   @override
   String toString() =>

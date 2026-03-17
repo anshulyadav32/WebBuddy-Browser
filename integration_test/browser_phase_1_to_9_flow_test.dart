@@ -316,16 +316,6 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        // Open tab switcher and create private tab
-        final tabCountText = find.text(
-          tester
-                  .widgetList<Text>(find.byType(Text))
-                  .where((w) => RegExp(r'^\d+$').hasMatch(w.data ?? ''))
-                  .map((w) => w.data!)
-                  .firstOrNull ??
-              '1',
-        );
-
         // ── Phase 7: Settings screen ───────────────────────────────────
         await tester.pumpWidget(
           ProviderScope(

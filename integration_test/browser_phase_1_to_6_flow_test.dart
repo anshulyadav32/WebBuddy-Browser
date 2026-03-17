@@ -30,7 +30,7 @@ class FakeBrowserController extends StateNotifier<BrowserPageState>
 
 /// Fake that avoids platform channel calls for cookie/cache clearing.
 class _FakePrivateDataManager extends PrivateDataManager {
-  _FakePrivateDataManager() : super(cookieManager: null);
+  _FakePrivateDataManager() : super();
 
   @override
   Future<void> clearPrivateSessionData({dynamic webViewController}) async {}
@@ -72,9 +72,6 @@ void main() {
                 return Consumer(
                   builder: (context, ref, _) {
                     final tabsState = ref.watch(tabsControllerProvider);
-                    final controller = ref.read(
-                      tabsControllerProvider.notifier,
-                    );
 
                     return Scaffold(
                       body: Column(
