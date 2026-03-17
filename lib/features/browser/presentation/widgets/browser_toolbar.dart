@@ -149,53 +149,64 @@ class _BrowserToolbarState extends ConsumerState<BrowserToolbar> {
 
             const SizedBox(width: 4),
 
-            // Tabs button
-            GestureDetector(
-              onTap: widget.onTabsTapped,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  border: Border.all(color: cs.outline),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  '${widget.tabCount}',
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+            // Trailing buttons in a Flexible, horizontally scrollable Row
+            Flexible(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Tabs button
+                    GestureDetector(
+                      onTap: widget.onTabsTapped,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: cs.outline),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          '${widget.tabCount}',
+                          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    // Shields button
+                    _ShieldsIconButton(onTap: widget.onShieldsTapped),
+
+                    // Downloads button
+                    IconButton(
+                      icon: const Icon(Icons.download, size: 20),
+                      tooltip: 'Downloads',
+                      onPressed: widget.onDownloadsTapped,
+                    ),
+
+                    // Page actions button
+                    IconButton(
+                      icon: const Icon(Icons.more_vert, size: 20),
+                      tooltip: 'Page actions',
+                      onPressed: widget.onPageActionsTapped,
+                    ),
+
+                    // Site info button
+                    IconButton(
+                      icon: const Icon(Icons.info_outline, size: 20),
+                      tooltip: 'Site info',
+                      onPressed: widget.onSiteInfoTapped,
+                    ),
+
+                    // Settings button
+                    IconButton(
+                      icon: const Icon(Icons.settings, size: 20),
+                      tooltip: 'Settings',
+                      onPressed: widget.onSettingsTapped,
+                    ),
+                  ],
                 ),
               ),
-            ),
-
-            // Shields button
-            _ShieldsIconButton(onTap: widget.onShieldsTapped),
-
-            // Downloads button
-            IconButton(
-              icon: const Icon(Icons.download, size: 20),
-              tooltip: 'Downloads',
-              onPressed: widget.onDownloadsTapped,
-            ),
-
-            // Page actions button
-            IconButton(
-              icon: const Icon(Icons.more_vert, size: 20),
-              tooltip: 'Page actions',
-              onPressed: widget.onPageActionsTapped,
-            ),
-
-            // Site info button
-            IconButton(
-              icon: const Icon(Icons.info_outline, size: 20),
-              tooltip: 'Site info',
-              onPressed: widget.onSiteInfoTapped,
-            ),
-
-            // Settings button
-            IconButton(
-              icon: const Icon(Icons.settings, size: 20),
-              tooltip: 'Settings',
-              onPressed: widget.onSettingsTapped,
             ),
           ],
         ),
