@@ -1,8 +1,16 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../../../privacy/presentation/shields_controller.dart';
 import '../browser_controller.dart';
+
+/// Actions for the toolbar 3-dots menu
+enum _ToolbarMenuAction {
+  pageActions,
+  siteInfo,
+  settings,
+  downloads,
+}
 
 /// The address / omnibox toolbar with navigation controls.
 class BrowserToolbar extends ConsumerStatefulWidget {
@@ -177,32 +185,70 @@ class _BrowserToolbarState extends ConsumerState<BrowserToolbar> {
                     // Shields button
                     _ShieldsIconButton(onTap: widget.onShieldsTapped),
 
-                    // Downloads button
-                    IconButton(
-                      icon: const Icon(Icons.download, size: 20),
-                      tooltip: 'Downloads',
-                      onPressed: widget.onDownloadsTapped,
-                    ),
 
-                    // Page actions button
-                    IconButton(
+
+                    // Page actions + Site info + Settings + Downloads in 3-dots menu
+                    PopupMenuButton<_ToolbarMenuAction>(
                       icon: const Icon(Icons.more_vert, size: 20),
-                      tooltip: 'Page actions',
-                      onPressed: widget.onPageActionsTapped,
-                    ),
-
-                    // Site info button
-                    IconButton(
-                      icon: const Icon(Icons.info_outline, size: 20),
-                      tooltip: 'Site info',
-                      onPressed: widget.onSiteInfoTapped,
-                    ),
-
-                    // Settings button
-                    IconButton(
-                      icon: const Icon(Icons.settings, size: 20),
-                      tooltip: 'Settings',
-                      onPressed: widget.onSettingsTapped,
+                      tooltip: 'More actions',
+                      onSelected: (value) {
+                        switch (value) {
+                          case _ToolbarMenuAction.pageActions:
+                            if (widget.onPageActionsTapped != null) widget.onPageActionsTapped!();
+                            break;
+                          case _ToolbarMenuAction.siteInfo:
+                            if (widget.onSiteInfoTapped != null) widget.onSiteInfoTapped!();
+                            break;
+                          case _ToolbarMenuAction.settings:
+                            if (widget.onSettingsTapped != null) widget.onSettingsTapped!();
+                            break;
+                          case _ToolbarMenuAction.downloads:
+                            if (widget.onDownloadsTapped != null) widget.onDownloadsTapped!();
+                            break;
+                        }
+                      },
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          value: _ToolbarMenuAction.pageActions,
+                          child: Row(
+                            children: const [
+                              Icon(Icons.more_vert, size: 18),
+                              SizedBox(width: 8),
+                              Text('Page actions'),
+                            ],
+                          ),
+                        ),
+                        PopupMenuItem(
+                          value: _ToolbarMenuAction.siteInfo,
+                          child: Row(
+                            children: const [
+                              Icon(Icons.info_outline, size: 18),
+                              SizedBox(width: 8),
+                              Text('Site info'),
+                            ],
+                          ),
+                        ),
+                        PopupMenuItem(
+                          value: _ToolbarMenuAction.settings,
+                          child: Row(
+                            children: const [
+                              Icon(Icons.settings, size: 18),
+                              SizedBox(width: 8),
+                              Text('Settings'),
+                            ],
+                          ),
+                        ),
+                        PopupMenuItem(
+                          value: _ToolbarMenuAction.downloads,
+                          child: Row(
+                            children: const [
+                              Icon(Icons.download, size: 18),
+                              SizedBox(width: 8),
+                              Text('Downloads'),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
