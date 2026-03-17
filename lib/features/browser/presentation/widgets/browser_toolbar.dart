@@ -1,3 +1,4 @@
+import 'package:web_buddy/features/tabs/application/tabs_controller.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,6 +11,7 @@ enum _ToolbarMenuAction {
   siteInfo,
   settings,
   downloads,
+  openInPrivateTab,
 }
 
 /// The address / omnibox toolbar with navigation controls.
@@ -106,17 +108,6 @@ class _BrowserToolbarState extends ConsumerState<BrowserToolbar> {
                   : null,
               tooltip: 'Forward',
             ),
-            // Reload / Stop
-            IconButton(
-              icon: Icon(
-                state.isLoading ? Icons.close : Icons.refresh,
-                size: 20,
-              ),
-              onPressed: () => state.isLoading
-                  ? controller.stopLoading()
-                  : controller.reload(),
-              tooltip: state.isLoading ? 'Stop' : 'Reload',
-            ),
             const SizedBox(width: 4),
 
             // Private mode indicator
@@ -134,12 +125,24 @@ class _BrowserToolbarState extends ConsumerState<BrowserToolbar> {
                 textInputAction: TextInputAction.go,
                 keyboardType: TextInputType.url,
                 autocorrect: false,
+                enableInteractiveSelection: true,
+                autofillHints: const [AutofillHints.url],
                 style: Theme.of(context).textTheme.bodyMedium,
                 decoration: InputDecoration(
                   hintText: 'Search or enter URL',
                   prefixIcon: Icon(
                     state.isLoading ? Icons.hourglass_top : Icons.search,
                     size: 18,
+                  ),
+                  suffixIcon: IconButton(
+                    tooltip: state.isLoading ? 'Stop' : 'Reload',
+                    icon: Icon(
+                      state.isLoading ? Icons.close : Icons.refresh,
+                      size: 18,
+                    ),
+                    onPressed: () => state.isLoading
+                        ? controller.stopLoading()
+                        : controller.reload(),
                   ),
                   isDense: true,
                   contentPadding: const EdgeInsets.symmetric(
@@ -154,105 +157,106 @@ class _BrowserToolbarState extends ConsumerState<BrowserToolbar> {
                 ),
               ),
             ),
-
             const SizedBox(width: 4),
-
-            // Trailing buttons in a Flexible, horizontally scrollable Row
-            Flexible(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Tabs button
-                    GestureDetector(
-                      onTap: widget.onTabsTapped,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: cs.outline),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          '${widget.tabCount}',
-                          style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
+            _ShieldsIconButton(onTap: widget.onShieldsTapped),
+            Semantics(
+              label: 'Tabs',
+              child: IconButton(
+                tooltip: 'Tabs (${widget.tabCount})',
+                onPressed: widget.onTabsTapped,
+                icon: Container(
+                  width: 24,
+                  height: 20,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: cs.outline, width: 1.4),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    widget.tabCount > 99 ? '99+' : '${widget.tabCount}',
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      height: 1,
                     ),
-
-                    // Shields button
-                    _ShieldsIconButton(onTap: widget.onShieldsTapped),
-
-
-
-                    // Page actions + Site info + Settings + Downloads in 3-dots menu
-                    PopupMenuButton<_ToolbarMenuAction>(
-                      icon: const Icon(Icons.more_vert, size: 20),
-                      tooltip: 'More actions',
-                      onSelected: (value) {
-                        switch (value) {
-                          case _ToolbarMenuAction.pageActions:
-                            if (widget.onPageActionsTapped != null) widget.onPageActionsTapped!();
-                            break;
-                          case _ToolbarMenuAction.siteInfo:
-                            if (widget.onSiteInfoTapped != null) widget.onSiteInfoTapped!();
-                            break;
-                          case _ToolbarMenuAction.settings:
-                            if (widget.onSettingsTapped != null) widget.onSettingsTapped!();
-                            break;
-                          case _ToolbarMenuAction.downloads:
-                            if (widget.onDownloadsTapped != null) widget.onDownloadsTapped!();
-                            break;
-                        }
-                      },
-                      itemBuilder: (context) => [
-                        PopupMenuItem(
-                          value: _ToolbarMenuAction.pageActions,
-                          child: Row(
-                            children: const [
-                              Icon(Icons.more_vert, size: 18),
-                              SizedBox(width: 8),
-                              Text('Page actions'),
-                            ],
-                          ),
-                        ),
-                        PopupMenuItem(
-                          value: _ToolbarMenuAction.siteInfo,
-                          child: Row(
-                            children: const [
-                              Icon(Icons.info_outline, size: 18),
-                              SizedBox(width: 8),
-                              Text('Site info'),
-                            ],
-                          ),
-                        ),
-                        PopupMenuItem(
-                          value: _ToolbarMenuAction.settings,
-                          child: Row(
-                            children: const [
-                              Icon(Icons.settings, size: 18),
-                              SizedBox(width: 8),
-                              Text('Settings'),
-                            ],
-                          ),
-                        ),
-                        PopupMenuItem(
-                          value: _ToolbarMenuAction.downloads,
-                          child: Row(
-                            children: const [
-                              Icon(Icons.download, size: 18),
-                              SizedBox(width: 8),
-                              Text('Downloads'),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                    maxLines: 1,
+                    overflow: TextOverflow.fade,
+                    softWrap: false,
+                  ),
                 ),
               ),
+            ),
+            PopupMenuButton<_ToolbarMenuAction>(
+              tooltip: 'More',
+              onSelected: (action) {
+                switch (action) {
+                  case _ToolbarMenuAction.pageActions:
+                    widget.onPageActionsTapped?.call();
+                    break;
+                  case _ToolbarMenuAction.siteInfo:
+                    widget.onSiteInfoTapped?.call();
+                    break;
+                  case _ToolbarMenuAction.settings:
+                    widget.onSettingsTapped?.call();
+                    break;
+                  case _ToolbarMenuAction.downloads:
+                    widget.onDownloadsTapped?.call();
+                    break;
+                  case _ToolbarMenuAction.openInPrivateTab:
+                    ref
+                        .read(tabsControllerProvider.notifier)
+                        .createNewTab(isPrivate: true, url: state.currentUrl);
+                    break;
+                }
+              },
+              itemBuilder: (context) => const [
+                PopupMenuItem(
+                  value: _ToolbarMenuAction.pageActions,
+                  child: ListTile(
+                    leading: Icon(Icons.menu_book_outlined),
+                    title: Text('Page actions'),
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                  ),
+                ),
+                PopupMenuItem(
+                  value: _ToolbarMenuAction.siteInfo,
+                  child: ListTile(
+                    leading: Icon(Icons.info_outline),
+                    title: Text('Site info'),
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                  ),
+                ),
+                PopupMenuItem(
+                  value: _ToolbarMenuAction.openInPrivateTab,
+                  child: ListTile(
+                    leading: Icon(Icons.shield_outlined),
+                    title: Text('Open in private tab'),
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                  ),
+                ),
+                PopupMenuDivider(),
+                PopupMenuItem(
+                  value: _ToolbarMenuAction.downloads,
+                  child: ListTile(
+                    leading: Icon(Icons.download_outlined),
+                    title: Text('Downloads'),
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                  ),
+                ),
+                PopupMenuItem(
+                  value: _ToolbarMenuAction.settings,
+                  child: ListTile(
+                    leading: Icon(Icons.settings_outlined),
+                    title: Text('Settings'),
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                  ),
+                ),
+              ],
+              icon: const Icon(Icons.more_vert),
             ),
           ],
         ),

@@ -1,3 +1,6 @@
+import 'package:web_buddy/features/browser/presentation/widgets/browser_toolbar.dart';
+import 'package:web_buddy/features/tabs/application/tabs_controller.dart';
+import 'package:web_buddy/features/browser/presentation/browser_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -52,7 +55,7 @@ class TabSwitcherScreen extends ConsumerWidget {
               tooltip: 'New private tab',
               onPressed: () {
                 controller.createNewTab(isPrivate: true);
-                Navigator.of(context).pop();
+                Future.microtask(() => Navigator.of(context).pop());
               },
             ),
           ),
@@ -63,7 +66,7 @@ class TabSwitcherScreen extends ConsumerWidget {
               tooltip: 'New tab',
               onPressed: () {
                 controller.createNewTab();
-                Navigator.of(context).pop();
+                Future.microtask(() => Navigator.of(context).pop());
               },
             ),
           ),
@@ -94,6 +97,12 @@ class TabSwitcherScreen extends ConsumerWidget {
                     Navigator.of(context).pop();
                   },
                   onClose: () => controller.closeTab(tab.id),
+                  onOpenInPrivate: () {
+                    controller.createNewTab(isPrivate: true);
+                    ref
+                        .read(browserControllerProvider.notifier)
+                        .loadInput(tab.currentUrl);
+                  },
                 );
               },
             ),

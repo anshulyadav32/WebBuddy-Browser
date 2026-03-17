@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../privacy/data/private_data_manager.dart';
 import '../../privacy/presentation/privacy_controller.dart';
@@ -27,9 +26,23 @@ class TabsController extends StateNotifier<TabsState> {
 
   final PrivateDataManager? _dataManager;
 
-  /// Opens a new tab and makes it active.
-  void createNewTab({bool isPrivate = false}) {
-    final tab = BrowserTabState.create(isPrivate: isPrivate);
+  /// Opens a new tab and makes it active. If a tab with the same URL exists, switch to it.
+  void createNewTab({bool isPrivate = false, String? url}) {
+    // Only dedupe when caller explicitly requests a URL.
+    if (url != null && url.isNotEmpty) {
+      final existing = state.tabs
+          .where((t) => t.currentUrl == url && t.isPrivate == isPrivate)
+          .toList();
+      if (existing.isNotEmpty) {
+        state = state.copyWith(activeTabId: existing.first.id);
+        return;
+      }
+    }
+
+    final tab = BrowserTabState.create(
+      isPrivate: isPrivate,
+      homepage: url ?? 'about:blank',
+    );
     state = state.copyWith(tabs: [...state.tabs, tab], activeTabId: tab.id);
   }
 

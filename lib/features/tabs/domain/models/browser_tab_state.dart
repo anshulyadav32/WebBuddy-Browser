@@ -13,9 +13,17 @@ class BrowserTabState {
     this.isPrivate = false,
   });
 
-  /// Creates a new tab with a generated UUID.
-  factory BrowserTabState.create({bool isPrivate = false}) {
-    return BrowserTabState(id: const Uuid().v4(), isPrivate: isPrivate);
+  /// Creates a new tab with a generated UUID and homepage.
+  factory BrowserTabState.create({
+    bool isPrivate = false,
+    String homepage = 'about:blank',
+  }) {
+    return BrowserTabState(
+      id: const Uuid().v4(),
+      currentUrl: homepage,
+      title: 'New Tab',
+      isPrivate: isPrivate,
+    );
   }
 
   final String id;

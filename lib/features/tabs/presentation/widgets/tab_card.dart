@@ -10,12 +10,14 @@ class TabCard extends StatelessWidget {
     required this.isActive,
     required this.onTap,
     required this.onClose,
+    required this.onOpenInPrivate,
   });
 
   final BrowserTabState tab;
   final bool isActive;
   final VoidCallback onTap;
   final VoidCallback onClose;
+  final VoidCallback onOpenInPrivate;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +46,8 @@ class TabCard extends StatelessWidget {
     }
 
     return Semantics(
-      label: '${tab.isPrivate ? "Private tab, " : ""}${tab.title}${isActive ? ", active" : ""}',
+      label:
+          '${tab.isPrivate ? "Private tab, " : ""}${tab.title}${isActive ? ", active" : ""}',
       button: true,
       child: GestureDetector(
         onTap: onTap,
@@ -86,7 +89,9 @@ class TabCard extends StatelessWidget {
                     child: Text(
                       tab.title,
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+                        fontWeight: isActive
+                            ? FontWeight.w600
+                            : FontWeight.normal,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -100,14 +105,26 @@ class TabCard extends StatelessWidget {
                       child: Icon(Icons.close, size: 18, color: cs.onSurface),
                     ),
                   ),
+                  Semantics(
+                    label: 'Open in Private Tab',
+                    button: true,
+                    child: GestureDetector(
+                      onTap: onOpenInPrivate,
+                      child: Icon(
+                        Icons.shield_outlined,
+                        size: 18,
+                        color: cs.tertiary,
+                      ),
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 4),
               Text(
                 tab.currentUrl,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: cs.onSurfaceVariant,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: cs.onSurfaceVariant),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
