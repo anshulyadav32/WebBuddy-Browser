@@ -105,7 +105,7 @@ void main() {
                                   ),
                                 );
                               },
-                              onDownloadsTapped: () {
+                              onPageActionsTapped: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (_) => const DownloadsScreen(),

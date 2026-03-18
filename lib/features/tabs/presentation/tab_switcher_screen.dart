@@ -2,6 +2,7 @@ import 'package:web_buddy/features/browser/presentation/browser_controller.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:web_buddy/features/tabs/domain/models/browser_tab_state.dart';
+import 'package:web_buddy/features/tabs/domain/models/tabs_state.dart';
 
 import '../../browser/presentation/widgets/browser_empty_view.dart';
 import '../application/tabs_controller.dart';

@@ -312,6 +312,7 @@ class _BrowserWebViewState extends ConsumerState<BrowserWebView> {
             payload = { type: 'link', url: link.href };
           }
           if (payload && window.WebBuddyContextMenu && window.WebBuddyContextMenu.postMessage) {
+            event.preventDefault();
             window.WebBuddyContextMenu.postMessage(JSON.stringify(payload));
           }
         }, true);

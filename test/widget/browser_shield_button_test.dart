@@ -40,7 +40,10 @@ void main() {
           overrides: overrides,
           child: MaterialApp(
             home: Scaffold(
-              body: BrowserToolbar(onShieldsTapped: () => shieldsTapped = true),
+              body: BrowserToolbar(
+                isPrivateMode: true,
+                onPageActionsTapped: () => shieldsTapped = true,
+              ),
             ),
           ),
         ),
@@ -59,17 +62,13 @@ void main() {
         ProviderScope(
           overrides: overrides,
           child: MaterialApp(
-            home: Scaffold(body: BrowserToolbar(onShieldsTapped: () {})),
+            home: const Scaffold(body: BrowserToolbar(isPrivateMode: true)),
           ),
         ),
       );
 
-      // Should find a shield icon (either filled or outlined).
-      expect(
-        find.byIcon(Icons.shield).evaluate().isNotEmpty ||
-            find.byIcon(Icons.shield_outlined).evaluate().isNotEmpty,
-        isTrue,
-      );
+      // Private mode indicator should render shield icon in toolbar.
+      expect(find.byIcon(Icons.shield), findsOneWidget);
     });
   });
 }

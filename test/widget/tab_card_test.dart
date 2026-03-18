@@ -14,7 +14,13 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: TabCard(tab: tab, isActive: true, onTap: () {}, onClose: () {}),
+          body: TabCard(
+            tab: tab,
+            isActive: true,
+            onTap: () {},
+            onClose: () {},
+            onOpenInPrivate: () {},
+          ),
         ),
       ),
     );
@@ -35,7 +41,13 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: TabCard(tab: tab, isActive: false, onTap: () {}, onClose: () {}),
+          body: TabCard(
+            tab: tab,
+            isActive: false,
+            onTap: () {},
+            onClose: () {},
+            onOpenInPrivate: () {},
+          ),
         ),
       ),
     );
@@ -53,7 +65,13 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: TabCard(tab: tab, isActive: true, onTap: () {}, onClose: () {}),
+          body: TabCard(
+            tab: tab,
+            isActive: true,
+            onTap: () {},
+            onClose: () {},
+            onOpenInPrivate: () {},
+          ),
         ),
       ),
     );
@@ -75,7 +93,13 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: TabCard(tab: tab, isActive: false, onTap: () {}, onClose: () {}),
+          body: TabCard(
+            tab: tab,
+            isActive: false,
+            onTap: () {},
+            onClose: () {},
+            onOpenInPrivate: () {},
+          ),
         ),
       ),
     );
@@ -93,7 +117,13 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: TabCard(tab: tab, isActive: false, onTap: () {}, onClose: () {}),
+          body: TabCard(
+            tab: tab,
+            isActive: false,
+            onTap: () {},
+            onClose: () {},
+            onOpenInPrivate: () {},
+          ),
         ),
       ),
     );

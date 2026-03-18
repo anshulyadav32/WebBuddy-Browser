@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../browser/domain/browser_page_state.dart';
 import '../../browser/presentation/browser_controller.dart';
 import '../../browser/presentation/widgets/browser_error_view.dart';
 import '../../browser/presentation/widgets/browser_progress_bar.dart';
@@ -32,6 +33,32 @@ class BrowserHomeScreen extends ConsumerStatefulWidget {
 
 class _BrowserHomeScreenState extends ConsumerState<BrowserHomeScreen> {
   bool _showFindBar = false;
+  bool _isLongPressSheetOpen = false;
+  ProviderSubscription<BrowserPageState>? _longPressSub;
+
+  @override
+  void initState() {
+    super.initState();
+    _longPressSub = ref.listenManual(browserControllerProvider, (
+      previous,
+      next,
+    ) {
+      final prevTarget = previous?.lastLongPressUrl;
+      final nextTarget = next.lastLongPressUrl;
+      if (nextTarget == null || nextTarget.isEmpty) return;
+      if (prevTarget == nextTarget || _isLongPressSheetOpen || !mounted) return;
+      _showLongPressContextActions(
+        nextTarget,
+        next.lastLongPressType ?? 'link',
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    _longPressSub?.close();
+    super.dispose();
+  }
 
   void _toggleFindBar() {
     setState(() => _showFindBar = !_showFindBar);
@@ -344,6 +371,141 @@ class _BrowserHomeScreenState extends ConsumerState<BrowserHomeScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(content: Text('Download added to queue')));
+  }
+
+  Future<void> _openTargetInNewTab({
+    required String target,
+    required bool isPrivate,
+    required bool inBackground,
+  }) async {
+    ref
+        .read(tabsControllerProvider.notifier)
+        .createNewTab(
+          isPrivate: isPrivate,
+          url: target,
+          makeActive: !inBackground,
+        );
+    if (inBackground && mounted) {
+      final mode = isPrivate ? 'private tab' : 'new tab';
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Opened in background $mode')));
+    }
+  }
+
+  Future<void> _showLongPressContextActions(String target, String type) async {
+    _isLongPressSheetOpen = true;
+    try {
+      if (!mounted) return;
+      await showModalBottomSheet<void>(
+        context: context,
+        builder: (ctx) => SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.touch_app_outlined),
+                title: Text(
+                  type == 'image'
+                      ? 'Image long-press actions'
+                      : 'Link long-press actions',
+                ),
+                subtitle: Text(
+                  target,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.open_in_new),
+                title: const Text('Open'),
+                onTap: () {
+                  Navigator.of(ctx).pop();
+                  _openLongPressTarget();
+                },
+              ),
+              if (type == 'link')
+                ListTile(
+                  leading: const Icon(Icons.tab),
+                  title: const Text('Open in new tab'),
+                  onTap: () {
+                    Navigator.of(ctx).pop();
+                    _openTargetInNewTab(
+                      target: target,
+                      isPrivate: false,
+                      inBackground: false,
+                    );
+                  },
+                ),
+              if (type == 'link')
+                ListTile(
+                  leading: const Icon(Icons.tab_unselected),
+                  title: const Text('Open in new tab in background'),
+                  onTap: () {
+                    Navigator.of(ctx).pop();
+                    _openTargetInNewTab(
+                      target: target,
+                      isPrivate: false,
+                      inBackground: true,
+                    );
+                  },
+                ),
+              if (type == 'link')
+                ListTile(
+                  leading: const Icon(Icons.shield_outlined),
+                  title: const Text('Open in private tab'),
+                  onTap: () {
+                    Navigator.of(ctx).pop();
+                    _openTargetInNewTab(
+                      target: target,
+                      isPrivate: true,
+                      inBackground: false,
+                    );
+                  },
+                ),
+              if (type == 'link')
+                ListTile(
+                  leading: const Icon(Icons.shield_moon_outlined),
+                  title: const Text('Open in private tab in background'),
+                  onTap: () {
+                    Navigator.of(ctx).pop();
+                    _openTargetInNewTab(
+                      target: target,
+                      isPrivate: true,
+                      inBackground: true,
+                    );
+                  },
+                ),
+              if (type == 'image')
+                ListTile(
+                  leading: const Icon(Icons.download_for_offline_outlined),
+                  title: const Text('Download image'),
+                  onTap: () {
+                    Navigator.of(ctx).pop();
+                    _downloadLongPressTarget();
+                  },
+                ),
+              ListTile(
+                leading: const Icon(Icons.copy),
+                title: const Text('Copy URL'),
+                onTap: () async {
+                  await Clipboard.setData(ClipboardData(text: target));
+                  if (!ctx.mounted) return;
+                  Navigator.of(ctx).pop();
+                  if (!mounted) return;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Target URL copied')),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+    } finally {
+      _isLongPressSheetOpen = false;
+      ref.read(browserControllerProvider.notifier).clearLongPressTarget();
+    }
   }
 
   @override

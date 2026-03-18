@@ -27,8 +27,16 @@ class TabsController extends StateNotifier<TabsState> {
 
   final PrivateDataManager? _dataManager;
 
-  /// Opens a new tab and makes it active. If a tab with the same URL exists, switch to it.
-  void createNewTab({bool isPrivate = false, String? url, String? groupId}) {
+  /// Opens a new tab.
+  ///
+  /// If [makeActive] is true, the new/existing tab becomes active.
+  /// If [makeActive] is false, the tab opens in the background.
+  void createNewTab({
+    bool isPrivate = false,
+    String? url,
+    String? groupId,
+    bool makeActive = true,
+  }) {
     // Only dedupe when caller explicitly requests a URL.
     if (url != null && url.isNotEmpty) {
       final existing = state.tabs
@@ -40,7 +48,9 @@ class TabsController extends StateNotifier<TabsState> {
           )
           .toList();
       if (existing.isNotEmpty) {
-        state = state.copyWith(activeTabId: existing.first.id);
+        if (makeActive) {
+          state = state.copyWith(activeTabId: existing.first.id);
+        }
         return;
       }
     }
@@ -50,7 +60,10 @@ class TabsController extends StateNotifier<TabsState> {
       homepage: url ?? 'about:blank',
       groupId: isPrivate ? null : groupId,
     );
-    state = state.copyWith(tabs: [...state.tabs, tab], activeTabId: tab.id);
+    state = state.copyWith(
+      tabs: [...state.tabs, tab],
+      activeTabId: makeActive ? tab.id : state.activeTabId,
+    );
   }
 
   /// Creates a tab group and optionally assigns a tab to it.

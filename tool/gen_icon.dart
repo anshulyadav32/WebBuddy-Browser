@@ -1,22 +1,10 @@
-wnload// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
-import 'dart:convert';
 
 // Minimal PNG encoder (RGBA, no dependencies)
 Uint8List encodePng(int width, int height, Uint8List rgba) {
-  Uint8List adler32(Uint8List data) {
-    int a = 1, b = 0;
-    for (final byte in data) {
-      a = (a + byte) % 65521;
-      b = (b + a) % 65521;
-    }
-    final r = ByteData(4);
-    r.setUint32(0, (b << 16) | a, Endian.big);
-    return r.buffer.asUint8List();
-  }
-
   Uint8List crc32(Uint8List data) {
     var crc = 0xFFFFFFFF;
     for (final b in data) {

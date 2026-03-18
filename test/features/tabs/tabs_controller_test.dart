@@ -31,6 +31,17 @@ void main() {
       expect(controller.state.activeTabId, controller.state.tabs.last.id);
     });
 
+    test('createNewTab can open in background', () {
+      controller.createNewTab(url: 'https://example.com', makeActive: false);
+
+      expect(controller.state.tabs.length, 2);
+      expect(controller.state.activeTabId, 'tab1');
+      expect(
+        controller.state.tabs.any((t) => t.currentUrl == 'https://example.com'),
+        true,
+      );
+    });
+
     test('switchTab changes active tab', () {
       controller.createNewTab();
       final newTabId = controller.state.tabs.last.id;
@@ -185,6 +196,22 @@ void main() {
         expect(controller.state.tabs.length, 2); // Still 2 tabs total
       });
 
+      test('background dedupe keeps current active tab', () {
+        controller.createNewTab(isPrivate: true, url: 'https://same.com');
+        final privateTabId = controller.state.activeTab.id;
+        controller.switchTab('tab1');
+
+        controller.createNewTab(
+          isPrivate: true,
+          url: 'https://same.com',
+          makeActive: false,
+        );
+
+        expect(controller.state.tabs.length, 2);
+        expect(controller.state.activeTabId, 'tab1');
+        expect(controller.state.tabs.any((t) => t.id == privateTabId), true);
+      });
+
       test('private and normal tabs with same URL are separate', () {
         const url = 'https://example.com';
 
@@ -203,7 +230,6 @@ void main() {
 
       test('private tab properties can be updated', () {
         controller.createNewTab(isPrivate: true);
-        final tabId = controller.state.activeTab.id;
 
         controller.updateActiveTab(
           title: 'Private Search',
