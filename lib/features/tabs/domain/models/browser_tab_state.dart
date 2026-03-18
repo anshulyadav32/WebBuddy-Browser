@@ -79,16 +79,16 @@ class BrowserTabState {
 
   @override
   int get hashCode => Object.hash(
-        id,
-        currentUrl,
-        title,
-        isLoading,
-        progress,
-        canGoBack,
-        canGoForward,
-        isPrivate,
-        groupId,
-      );
+    id,
+    currentUrl,
+    title,
+    isLoading,
+    progress,
+    canGoBack,
+    canGoForward,
+    isPrivate,
+    groupId,
+  );
 
   @override
   String toString() =>

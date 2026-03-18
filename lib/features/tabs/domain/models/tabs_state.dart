@@ -16,10 +16,8 @@ class TabsState {
 
   /// Returns the currently active tab, falling back to the first tab if the
   /// active ID is stale (e.g. after state restoration).
-  BrowserTabState get activeTab => tabs.firstWhere(
-        (t) => t.id == activeTabId,
-        orElse: () => tabs.first,
-      );
+  BrowserTabState get activeTab =>
+      tabs.firstWhere((t) => t.id == activeTabId, orElse: () => tabs.first);
 
   /// Whether the active tab is a private tab.
   bool get isActiveTabPrivate => activeTab.isPrivate;
@@ -45,7 +43,8 @@ class TabsState {
       tabs.where((t) => !t.isPrivate && t.groupId == null).toList();
 
   /// Private tabs are intentionally separate from group management.
-  List<BrowserTabState> get privateTabs => tabs.where((t) => t.isPrivate).toList();
+  List<BrowserTabState> get privateTabs =>
+      tabs.where((t) => t.isPrivate).toList();
 
   TabsState copyWith({
     List<BrowserTabState>? tabs,
@@ -68,8 +67,11 @@ class TabsState {
           listEquals(tabs, other.tabs);
 
   @override
-      int get hashCode =>
-        Object.hash(activeTabId, Object.hashAll(tabs), Object.hashAll(groupNames.entries));
+  int get hashCode => Object.hash(
+    activeTabId,
+    Object.hashAll(tabs),
+    Object.hashAll(groupNames.entries),
+  );
 
   @override
   String toString() =>

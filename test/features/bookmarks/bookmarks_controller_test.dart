@@ -37,7 +37,10 @@ void main() {
     });
 
     test('toggleBookmark adds when absent', () async {
-      await controller.toggleBookmark(url: 'https://flutter.dev', title: 'Flutter');
+      await controller.toggleBookmark(
+        url: 'https://flutter.dev',
+        title: 'Flutter',
+      );
 
       expect(controller.state.length, 1);
       expect(controller.state.first.url, 'https://flutter.dev');
@@ -45,10 +48,16 @@ void main() {
     });
 
     test('toggleBookmark removes when present', () async {
-      await controller.toggleBookmark(url: 'https://flutter.dev', title: 'Flutter');
+      await controller.toggleBookmark(
+        url: 'https://flutter.dev',
+        title: 'Flutter',
+      );
       expect(controller.state.length, 1);
 
-      await controller.toggleBookmark(url: 'https://flutter.dev', title: 'https://flutter.dev');
+      await controller.toggleBookmark(
+        url: 'https://flutter.dev',
+        title: 'https://flutter.dev',
+      );
       expect(controller.state, isEmpty);
     });
 
@@ -59,13 +68,19 @@ void main() {
     });
 
     test('title fallback uses URL when title is null', () async {
-      await controller.toggleBookmark(url: 'https://flutter.dev', title: 'https://flutter.dev');
+      await controller.toggleBookmark(
+        url: 'https://flutter.dev',
+        title: 'https://flutter.dev',
+      );
 
       expect(controller.state.first.title, 'https://flutter.dev');
     });
 
     test('isBookmarked returns true for existing bookmark', () async {
-      await controller.toggleBookmark(url: 'https://flutter.dev', title: 'Flutter');
+      await controller.toggleBookmark(
+        url: 'https://flutter.dev',
+        title: 'Flutter',
+      );
 
       expect(await controller.isBookmarked('https://flutter.dev'), isTrue);
     });
@@ -75,7 +90,10 @@ void main() {
     });
 
     test('removeBookmark removes specific bookmark', () async {
-      await controller.toggleBookmark(url: 'https://flutter.dev', title: 'Flutter');
+      await controller.toggleBookmark(
+        url: 'https://flutter.dev',
+        title: 'Flutter',
+      );
       await controller.toggleBookmark(url: 'https://dart.dev', title: 'Dart');
       expect(controller.state.length, 2);
 
@@ -86,7 +104,10 @@ void main() {
     });
 
     test('clearAll empties state', () async {
-      await controller.toggleBookmark(url: 'https://flutter.dev', title: 'Flutter');
+      await controller.toggleBookmark(
+        url: 'https://flutter.dev',
+        title: 'Flutter',
+      );
       await controller.toggleBookmark(url: 'https://dart.dev', title: 'Dart');
 
       await controller.clearAllBookmarks();

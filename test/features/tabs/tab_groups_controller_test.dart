@@ -52,7 +52,9 @@ void main() {
       final privateTabId = controller.state.activeTabId;
       final groupId = controller.createGroup('Secret', tabId: privateTabId);
 
-      final privateTab = controller.state.tabs.firstWhere((t) => t.id == privateTabId);
+      final privateTab = controller.state.tabs.firstWhere(
+        (t) => t.id == privateTabId,
+      );
       expect(privateTab.isPrivate, isTrue);
       expect(privateTab.groupId, isNull);
       expect(controller.state.groupNames[groupId], 'Secret');

@@ -65,10 +65,7 @@ class TabsController extends StateNotifier<TabsState> {
         ? existingEntry.first.key
         : const Uuid().v4();
 
-    final updatedGroups = {
-      ...state.groupNames,
-      groupId: trimmed,
-    };
+    final updatedGroups = {...state.groupNames, groupId: trimmed};
 
     var updatedTabs = state.tabs;
     if (tabId != null) {
@@ -87,12 +84,7 @@ class TabsController extends StateNotifier<TabsState> {
     if (!state.groupNames.containsKey(groupId)) return;
     final trimmed = name.trim();
     if (trimmed.isEmpty) return;
-    state = state.copyWith(
-      groupNames: {
-        ...state.groupNames,
-        groupId: trimmed,
-      },
-    );
+    state = state.copyWith(groupNames: {...state.groupNames, groupId: trimmed});
   }
 
   /// Assigns a non-private tab to an existing group.
@@ -199,7 +191,9 @@ class TabsController extends StateNotifier<TabsState> {
         .toSet();
 
     final cleaned = Map<String, String>.fromEntries(
-      state.groupNames.entries.where((entry) => usedGroupIds.contains(entry.key)),
+      state.groupNames.entries.where(
+        (entry) => usedGroupIds.contains(entry.key),
+      ),
     );
 
     if (cleaned.length != state.groupNames.length) {

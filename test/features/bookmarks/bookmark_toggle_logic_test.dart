@@ -18,26 +18,44 @@ void main() {
 
   group('Bookmark toggle logic', () {
     test('toggle adds bookmark when absent', () async {
-      await controller.toggleBookmark(url: 'https://example.com', title: 'Example');
+      await controller.toggleBookmark(
+        url: 'https://example.com',
+        title: 'Example',
+      );
       expect(await controller.isBookmarked('https://example.com'), isTrue);
       expect(controller.state.length, 1);
     });
 
     test('toggle removes bookmark when present', () async {
-      await controller.toggleBookmark(url: 'https://example.com', title: 'Example');
-      await controller.toggleBookmark(url: 'https://example.com', title: 'https://example.com');
+      await controller.toggleBookmark(
+        url: 'https://example.com',
+        title: 'Example',
+      );
+      await controller.toggleBookmark(
+        url: 'https://example.com',
+        title: 'https://example.com',
+      );
 
       expect(await controller.isBookmarked('https://example.com'), isFalse);
       expect(controller.state, isEmpty);
     });
 
     test('same page bookmarked twice does not duplicate', () async {
-      await controller.toggleBookmark(url: 'https://example.com', title: 'Example');
+      await controller.toggleBookmark(
+        url: 'https://example.com',
+        title: 'Example',
+      );
       // Second add via repository add() replaces by URL
-      await controller.toggleBookmark(url: 'https://example.com', title: 'https://example.com');
+      await controller.toggleBookmark(
+        url: 'https://example.com',
+        title: 'https://example.com',
+      );
       // Now it's removed (toggled off)
 
-      await controller.toggleBookmark(url: 'https://example.com', title: 'Example Re-added');
+      await controller.toggleBookmark(
+        url: 'https://example.com',
+        title: 'Example Re-added',
+      );
       expect(controller.state.length, 1);
     });
 
@@ -46,7 +64,10 @@ void main() {
       await controller.toggleBookmark(url: 'https://x.com', title: 'X');
       expect(await controller.isBookmarked('https://x.com'), isTrue);
 
-      await controller.toggleBookmark(url: 'https://x.com', title: 'https://x.com');
+      await controller.toggleBookmark(
+        url: 'https://x.com',
+        title: 'https://x.com',
+      );
       expect(await controller.isBookmarked('https://x.com'), isFalse);
 
       await controller.toggleBookmark(url: 'https://x.com', title: 'X again');
@@ -60,7 +81,10 @@ void main() {
     });
 
     test('title fallback uses URL when title is null', () async {
-      await controller.toggleBookmark(url: 'https://example.com', title: 'https://example.com');
+      await controller.toggleBookmark(
+        url: 'https://example.com',
+        title: 'https://example.com',
+      );
       expect(controller.state.first.title, 'https://example.com');
     });
 

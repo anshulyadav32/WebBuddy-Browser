@@ -45,7 +45,10 @@ class BookmarksController extends StateNotifier<List<Bookmark>> {
   ///
   /// If the URL is already bookmarked, removes it.
   /// If not, adds it using the provided [title] (falls back to [url]).
-  Future<void> toggleBookmark({required String title, required String url}) async {
+  Future<void> toggleBookmark({
+    required String title,
+    required String url,
+  }) async {
     if (await isBookmarked(url)) {
       await removeBookmarkByUrl(url);
     } else {
@@ -61,7 +64,10 @@ class BookmarksController extends StateNotifier<List<Bookmark>> {
 
   /// Legacy API retained for compatibility with existing callers/tests.
   Future<void> toggleBookmarkLegacy(String url, {String? title}) async {
-    await toggleBookmark(url: url, title: (title != null && title.isNotEmpty) ? title : url);
+    await toggleBookmark(
+      url: url,
+      title: (title != null && title.isNotEmpty) ? title : url,
+    );
   }
 
   /// Removes a bookmark by URL.
